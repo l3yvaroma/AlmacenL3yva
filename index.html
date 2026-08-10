@@ -38,7 +38,6 @@
 body{background:var(--bg);color:var(--text);display:flex;justify-content:center;min-height:100vh;padding:0}
 .phone{width:100%;max-width:430px;height:100vh;max-height:932px;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;position:relative}
 
-/* Header */
 .header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-bottom:1px solid var(--border)}
 .header h1{font-size:20px;font-weight:700;letter-spacing:-0.5px}
 .header-actions{display:flex;gap:12px}
@@ -47,23 +46,19 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .icon-btn svg{width:20px;height:20px;stroke:var(--text-secondary);fill:none;stroke-width:2}
 .icon-btn:hover svg{stroke:var(--accent)}
 
-/* Content */
 .content{flex:1;overflow-y:auto;padding:16px 20px 100px;scrollbar-width:none}
 .content::-webkit-scrollbar{display:none}
 .screen{display:none;animation:fadeIn 0.3s ease}
 .screen.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-/* Location Selector */
 .location-selector{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all 0.2s}
 .location-selector:hover{border-color:var(--accent);background:var(--card-hover)}
 .location-selector span{font-size:14px;font-weight:500;color:var(--text)}
 .location-selector svg{width:18px;height:18px;stroke:var(--text-secondary);fill:none;stroke-width:2}
 
-/* Section Title */
 .section-title{font-size:13px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
 
-/* KPI Grid */
 .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
 .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:all 0.2s;cursor:pointer}
 .kpi-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-glow)}
@@ -73,7 +68,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .kpi-card .value{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:4px}
 .kpi-card .label{font-size:12px;color:var(--text-secondary);font-weight:500}
 
-/* Movement List */
 .movement-list{display:flex;flex-direction:column;gap:8px}
 .movement-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;align-items:center;gap:12px;transition:all 0.2s;cursor:pointer}
 .movement-item:hover{border-color:var(--accent);background:var(--card-hover)}
@@ -90,20 +84,17 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .amount-positive{color:var(--accent)}
 .amount-negative{color:var(--danger)}
 
-/* Search Bar */
 .search-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
 .search-bar svg{width:18px;height:18px;stroke:var(--text-muted);fill:none;stroke-width:2;flex-shrink:0}
 .search-bar input{flex:1;background:none;border:none;outline:none;font-size:14px;color:var(--text)}
 .search-bar input::placeholder{color:var(--text-muted)}
 
-/* Filter Chips */
 .filter-chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:16px;scrollbar-width:none}
 .filter-chips::-webkit-scrollbar{display:none}
 .chip{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;background:var(--card);border:1px solid var(--border);color:var(--text-secondary);cursor:pointer;white-space:nowrap;transition:all 0.2s}
 .chip:hover{border-color:var(--accent);color:var(--text)}
 .chip.active{background:var(--accent);color:#000;border-color:var(--accent)}
 
-/* Article Card */
 .article-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;transition:all 0.2s;cursor:pointer}
 .article-card:hover{border-color:var(--accent);transform:translateX(4px)}
 .article-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
@@ -121,7 +112,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .stat-warning .stat-value{color:var(--warning)}
 .stat-danger .stat-value{color:var(--danger)}
 
-/* Person Card */
 .person-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
 .person-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .person-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-dim));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#000}
@@ -135,13 +125,11 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .person-detail-row .label{color:var(--text-muted)}
 .person-detail-row .value{font-weight:600;font-variant-numeric:tabular-nums}
 
-/* Tabs */
 .tabs{display:flex;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px;margin-bottom:16px}
 .tab{flex:1;text-align:center;padding:10px;border-radius:var(--radius-xs);font-size:13px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all 0.2s}
 .tab:hover{color:var(--text)}
 .tab.active{background:var(--accent);color:#000}
 
-/* Selection Bar */
 .selection-bar{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--card);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;z-index:100;backdrop-filter:blur(20px)}
 .selection-bar.hidden{display:none}
 .checkbox-all{display:flex;align-items:center;gap:8px;cursor:pointer}
@@ -155,12 +143,10 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .btn-danger:hover{background:var(--danger-dim)}
 .btn-danger:disabled{opacity:0.4;cursor:not-allowed}
 
-/* FAB */
 .fab{position:fixed;bottom:90px;right:20px;width:56px;height:56px;border-radius:50%;background:var(--accent);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(57,255,20,0.3);z-index:50;transition:all 0.2s}
 .fab:hover{transform:scale(1.05);box-shadow:0 6px 30px rgba(57,255,20,0.4)}
 .fab svg{width:24px;height:24px;stroke:#000;fill:none;stroke-width:2.5}
 
-/* Bottom Nav */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--surface);border-top:1px solid var(--border);padding:8px 20px 24px;display:flex;justify-content:space-around;z-index:40}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;position:relative}
 .nav-item svg{width:24px;height:24px;stroke:var(--text-muted);fill:none;stroke-width:2;transition:all 0.2s}
@@ -173,7 +159,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .nav-item.fab-nav .fab-circle{width:48px;height:48px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(57,255,20,0.3)}
 .nav-item.fab-nav .fab-circle svg{stroke:#000;stroke-width:2.5}
 
-/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);display:none;align-items:flex-end;z-index:200}
 .modal-overlay.open{display:flex}
 .modal-sheet{background:var(--surface);width:100%;max-width:430px;margin:0 auto;border-radius:var(--radius) var(--radius) 0 0;padding:24px 20px 32px;max-height:90vh;overflow-y:auto;animation:slideUp 0.3s ease}
@@ -192,23 +177,24 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .btn-secondary{width:100%;padding:16px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-top:8px}
 .btn-secondary:hover{border-color:var(--accent)}
 
-/* Toast */
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 20px;display:flex;align-items:center;gap:10px;z-index:300;box-shadow:var(--shadow);transition:transform 0.3s ease}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast svg{width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:2}
 .toast.error svg{stroke:var(--danger)}
 .toast span{font-size:14px;font-weight:500}
 
-/* Empty State */
 .empty-state{text-align:center;padding:60px 20px}
 .empty-state svg{width:64px;height:64px;stroke:var(--text-muted);fill:none;stroke-width:1.5;margin-bottom:16px;opacity:0.5}
 .empty-state h3{font-size:16px;font-weight:600;margin-bottom:8px}
 .empty-state p{font-size:13px;color:var(--text-muted)}
 
-/* Checkbox in list */
 .list-checkbox{width:22px;height:22px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
 
-/* Utility */
+.detail-row{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border)}
+.detail-row:last-child{border-bottom:none}
+.detail-label{font-size:13px;color:var(--text-muted);font-weight:500}
+.detail-value{font-size:14px;font-weight:600;text-align:right;max-width:60%}
+
 .text-accent{color:var(--accent)}
 .text-danger{color:var(--danger)}
 .text-muted{color:var(--text-muted)}
@@ -218,7 +204,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 </head>
 <body>
 <div class="phone">
-  <!-- Header -->
   <div class="header">
     <button class="icon-btn" onclick="toggleMenu()">
       <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
@@ -234,9 +219,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     </div>
   </div>
 
-  <!-- Content -->
   <div class="content">
-    <!-- INICIO -->
     <div class="screen active" id="scr-inicio">
       <div class="location-selector" onclick="showToast('Selector de almacén próximamente')">
         <span>📍 Almacén Principal</span>
@@ -253,7 +236,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
       <div class="movement-list" id="ultimos"></div>
     </div>
 
-    <!-- ARTÍCULOS -->
     <div class="screen" id="scr-articulos">
       <div class="search-bar">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -263,7 +245,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
       <div id="lista-articulos"></div>
     </div>
 
-    <!-- ASIGNADOS -->
     <div class="screen" id="scr-asignados">
       <div class="tabs">
         <div class="tab active" id="tab-activos" onclick="setAsigTab('activos')">En circulación</div>
@@ -276,7 +257,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
       <div id="lista-asignados"></div>
     </div>
 
-    <!-- PERSONAS -->
     <div class="screen" id="scr-personas">
       <div class="search-bar">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -285,7 +265,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
       <div id="lista-personas"></div>
     </div>
 
-    <!-- HISTORIAL -->
     <div class="screen" id="scr-historial">
       <div class="filter-chips" id="mov-chips"></div>
       <div id="lista-historial"></div>
@@ -296,7 +275,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     </div>
   </div>
 
-  <!-- Selection Bar -->
   <div class="selection-bar hidden" id="sel-bar">
     <label class="checkbox-all">
       <input type="checkbox" id="sel-todos" onchange="toggleSelTodos()">
@@ -307,12 +285,10 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     <button class="btn-mini btn-danger" id="btn-eliminar" onclick="confirmarEliminarMov()" disabled>Eliminar</button>
   </div>
 
-  <!-- FAB -->
   <button class="fab" id="fab" onclick="openFab()">
     <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
   </button>
 
-  <!-- Bottom Nav -->
   <div class="bottom-nav">
     <div class="nav-item active" data-s="inicio" onclick="go('inicio')">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -341,7 +317,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     </div>
   </div>
 
-  <!-- Modals -->
   <div class="modal-overlay" id="ov-acciones"><div class="modal-sheet">
     <div class="modal-grab"></div>
     <div class="modal-title">¿Qué deseas registrar?</div>
@@ -486,6 +461,8 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 
   <div class="modal-overlay" id="ov-detalle"><div class="modal-sheet" id="detalle-body"></div></div>
 
+  <div class="modal-overlay" id="ov-movimiento"><div class="modal-sheet" id="movimiento-body"></div></div>
+
   <div class="modal-overlay" id="ov-confirm"><div class="modal-sheet">
     <div class="modal-grab"></div>
     <div class="modal-title" id="conf-title">⚠️ Confirmar</div>
@@ -495,7 +472,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     <button class="btn-secondary" onclick="closeM('ov-confirm')">Cancelar</button>
   </div></div>
 
-  <!-- Toast -->
   <div class="toast" id="toast">
     <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
     <span id="toast-msg"></span>
@@ -598,6 +574,49 @@ function confirmarEliminarPersona(id){
 }
 function eliminarPersona(id){db.movements.forEach(m=>{if(m.personaId===id)m.personaId=''});db.people=db.people.filter(p=>p.id!==id);save();renderAll();showToast('Persona eliminada')}
 
+/* ═══════ VER DETALLE DE MOVIMIENTO ═══════ */
+function verDetalleMovimiento(id){
+  const m=db.movements.find(x=>x.id===id);
+  if(!m)return;
+  const a=articulo(m.artId);
+  const p=m.personaId?db.people.find(x=>x.id===m.personaId):null;
+  
+  const tipoLabel={entrada:'Entrada',asignacion:'Asignación',devolucion:'Devolución',consumo:'Consumo'}[m.tipo]||m.tipo;
+  const badgeClass=m.tipo==='entrada'||m.tipo==='devolucion'?'badge-entrada':m.tipo==='consumo'?'badge-consumo':'badge-salida';
+  const estadoLabel={activo:'🟡 En circulación',devuelto:'✅ Devuelto',consumido:'🔴 Consumido',ok:'✅ Completado'}[m.estado]||m.estado;
+  
+  let html=`<div class="modal-grab"></div>
+    <div class="modal-title">${tipoLabel}</div>
+    <div class="modal-subtitle"><span class="movement-badge ${badgeClass}" style="display:inline-block;margin-right:8px">${m.tipo.toUpperCase()}</span>${fmt(m.fecha)}</div>
+    
+    <div class="detail-row"><span class="detail-label">Artículo</span><span class="detail-value">${esc(a?a.nombre:'—')}</span></div>
+    <div class="detail-row"><span class="detail-label">Código</span><span class="detail-value">${esc(a?(a.codigo||'s/código'):'—')}</span></div>
+    <div class="detail-row"><span class="detail-label">Cantidad</span><span class="detail-value text-accent">${m.cant} ${esc(a?a.unidad:'')}</span></div>`;
+  
+  if(m.tipo==='asignacion'){
+    const rest=m.cant-m.devuelto;
+    html+=`<div class="detail-row"><span class="detail-label">Pendiente</span><span class="detail-value ${rest>0?'text-accent':'text-muted'}">${rest} ${esc(a?a.unidad:'')}</span></div>`;
+  }
+  
+  html+=`<div class="detail-row"><span class="detail-label">Responsable</span><span class="detail-value">${esc(p?p.nombre:'—')}</span></div>
+    <div class="detail-row"><span class="detail-label">Ubicación</span><span class="detail-value">${esc(m.ubic)}</span></div>
+    <div class="detail-row"><span class="detail-label">Estado</span><span class="detail-value">${estadoLabel}</span></div>
+    <div class="detail-row"><span class="detail-label">Registrado por</span><span class="detail-value">${esc(m.user||'—')}</span></div>`;
+  
+  if(m.notas){
+    html+=`<div class="detail-row"><span class="detail-label">Notas</span><span class="detail-value" style="text-align:left;max-width:100%;margin-top:8px;display:block">${esc(m.notas)}</span></div>`;
+  }
+  
+  if(m.tipo==='asignacion'&&m.estado==='activo'){
+    html+=`<button class="btn-primary mt-4" onclick="closeM('ov-movimiento');devolverDesde('${m.id}')">📥 Registrar devolución</button>`;
+  }
+  
+  html+=`<button class="btn-secondary" onclick="closeM('ov-movimiento')">Cerrar</button>`;
+  
+  document.getElementById('movimiento-body').innerHTML=html;
+  openM('ov-movimiento');
+}
+
 function renderInicio(){
   const arts=db.articles;
   const activos=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo');
@@ -618,7 +637,7 @@ function renderInicio(){
     const badgeClass=m.tipo==='entrada'||m.tipo==='devolucion'?'badge-entrada':m.tipo==='salida'||m.tipo==='consumo'?'badge-salida':'badge-transferencia';
     const amountClass=(m.tipo==='entrada'||m.tipo==='devolucion')?'amount-positive':'amount-negative';
     const sign=(m.tipo==='entrada'||m.tipo==='devolucion')?'+':'-';
-    return `<div class="movement-item"><span class="movement-badge ${badgeClass}">${m.tipo.toUpperCase()}</span><div class="movement-info"><div class="name">${esc(a?a.nombre:'?')}</div><div class="meta">${fmt(m.fecha)} · ${esc(m.user||'—')}</div></div><div class="movement-amount ${amountClass}">${sign}${m.cant}</div></div>`;
+    return `<div class="movement-item" onclick="verDetalleMovimiento('${m.id}')"><span class="movement-badge ${badgeClass}">${m.tipo.toUpperCase()}</span><div class="movement-info"><div class="name">${esc(a?a.nombre:'?')}</div><div class="meta">${fmt(m.fecha)} · ${esc(m.user||'—')}</div></div><div class="movement-amount ${amountClass}">${sign}${m.cant}</div></div>`;
   }).join(''):'<div class="empty-state"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h3>Sin movimientos</h3><p>Los movimientos aparecerán aquí</p></div>';
 }
 
@@ -648,7 +667,7 @@ function renderAsignados(){
   list.sort((a,b)=>b.fecha.localeCompare(a.fecha));
   document.getElementById('lista-asignados').innerHTML=list.length?list.map(m=>{
     const a=articulo(m.artId);const rest=m.cant-m.devuelto;
-    return `<div class="movement-item"><div class="movement-info"><div class="name">${esc(a?a.nombre:'?')}</div><div class="meta">👤 ${esc(persona(m.personaId))} · 📍 ${esc(m.ubic)} · ${fmt(m.fecha)}</div></div><div class="movement-amount">${rest} ${esc(a?a.unidad:'')}</div>${asigTab==='activos'?`<button class="btn-mini btn-ghost" onclick="devolverDesde('${m.id}')">Devolver</button>`:''}</div>`;
+    return `<div class="movement-item" onclick="verDetalleMovimiento('${m.id}')"><div class="movement-info"><div class="name">${esc(a?a.nombre:'?')}</div><div class="meta">👤 ${esc(persona(m.personaId))} · 📍 ${esc(m.ubic)} · ${fmt(m.fecha)}</div></div><div class="movement-amount">${rest} ${esc(a?a.unidad:'')}</div>${asigTab==='activos'?`<button class="btn-mini btn-ghost" onclick="event.stopPropagation();devolverDesde('${m.id}')">Devolver</button>`:''}</div>`;
   }).join(''):`<div class="empty-state"><svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/></svg><h3>${asigTab==='activos'?'Nada en circulación':'Sin devoluciones'}</h3><p>${asigTab==='activos'?'No hay artículos asignados':'No hay devoluciones registradas'}</p></div>`;
 }
 
@@ -661,7 +680,7 @@ function renderPersonas(){
   (list.length?list.map(p=>{
     const tiene=db.movements.filter(m=>m.personaId===p.id&&m.tipo==='asignacion'&&m.estado==='activo'&&m.cant-m.devuelto>0);
     const consumos=db.movements.filter(m=>m.personaId===p.id&&m.tipo==='consumo').sort((a,b)=>b.fecha.localeCompare(a.fecha));
-    return `<div class="person-card"><div class="person-header"><div class="person-avatar">${p.nombre.charAt(0)}</div><div class="person-info"><div class="person-name">${esc(p.nombre)}</div><div class="person-role">${esc(p.cargo||'Sin cargo')}</div></div><span class="person-badge ${tiene.length?'':'ok'}">${tiene.length} por devolver</span><button class="article-delete" onclick="confirmarEliminarPersona('${p.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>${tiene.length?'<div class="person-details"><div class="section-title" style="margin-bottom:8px">📤 A devolver</div>'+tiene.map(m=>{const a=articulo(m.artId);return `<div class="person-detail-row"><span class="label">${esc(a?a.nombre:'?')} · ${esc(m.ubic)}</span><span class="value">${m.cant-m.devuelto}</span></div>`}).join('')+'</div>':''}${consumos.length?'<div class="person-details"><div class="section-title" style="margin-bottom:8px">🧻 Recibidos</div>'+consumos.slice(0,5).map(m=>{const a=articulo(m.artId);return `<div class="person-detail-row"><span class="label">${esc(a?a.nombre:'?')} · ${fmt(m.fecha)}</span><span class="value">${m.cant}</span></div>`}).join('')+'</div>':''}</div>`;
+    return `<div class="person-card"><div class="person-header"><div class="person-avatar">${p.nombre.charAt(0)}</div><div class="person-info"><div class="person-name">${esc(p.nombre)}</div><div class="person-role">${esc(p.cargo||'Sin cargo')}</div></div><span class="person-badge ${tiene.length?'':'ok'}">${tiene.length} por devolver</span><button class="article-delete" onclick="confirmarEliminarPersona('${p.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>${tiene.length?'<div class="person-details"><div class="section-title" style="margin-bottom:8px">📤 A devolver</div>'+tiene.map(m=>{const a=articulo(m.artId);return `<div class="person-detail-row" onclick="verDetalleMovimiento('${m.id}')" style="cursor:pointer"><span class="label">${esc(a?a.nombre:'?')} · ${esc(m.ubic)}</span><span class="value">${m.cant-m.devuelto}</span></div>`}).join('')+'</div>':''}${consumos.length?'<div class="person-details"><div class="section-title" style="margin-bottom:8px">🧻 Recibidos</div>'+consumos.slice(0,5).map(m=>{const a=articulo(m.artId);return `<div class="person-detail-row" onclick="verDetalleMovimiento('${m.id}')" style="cursor:pointer"><span class="label">${esc(a?a.nombre:'?')} · ${fmt(m.fecha)}</span><span class="value">${m.cant}</span></div>`}).join('')+'</div>':''}</div>`;
   }).join(''):'<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><h3>Sin personas</h3><p>Agrega tu primera persona</p></div>');
 }
 
@@ -684,7 +703,7 @@ function renderHistorial(){
       if(modoSeleccion){
         return `<div class="movement-item"><input type="checkbox" class="list-checkbox" ${seleccionados.has(m.id)?'checked':''} onchange="toggleSel('${m.id}')"><span class="movement-badge ${badgeClass}">${m.tipo.toUpperCase()}</span><div class="movement-info"><div class="name">${esc(a?a.nombre:'?')}</div><div class="meta">${fmt(m.fecha)} · ${esc(m.user||'—')}</div></div><div class="movement-amount ${amountClass}">${sign}${m.cant}</div></div>`;
       }
-      return `<div class="movement-item"><span class="movement-badge ${badgeClass}">${m.tipo.toUpperCase()}</span><div class="movement-info"><div class="name">${esc(a?a.nombre:'?')}</div><div class="meta">${fmt(m.fecha)} · ${esc(m.user||'—')}</div></div><div class="movement-amount ${amountClass}">${sign}${m.cant}</div></div>`;
+      return `<div class="movement-item" onclick="verDetalleMovimiento('${m.id}')"><span class="movement-badge ${badgeClass}">${m.tipo.toUpperCase()}</span><div class="movement-info"><div class="name">${esc(a?a.nombre:'?')}</div><div class="meta">${fmt(m.fecha)} · ${esc(m.user||'—')}</div></div><div class="movement-amount ${amountClass}">${sign}${m.cant}</div></div>`;
     }).join('');
   } else {
     html='<div class="empty-state"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><h3>Sin movimientos</h3><p>Los movimientos aparecerán aquí</p></div>';
@@ -727,7 +746,7 @@ function verDetalle(id){
   const a=articulo(id);const disp=disponibles(a),asig=asignados(a);
   const asigs=db.movements.filter(m=>m.artId===id&&m.tipo==='asignacion'&&m.estado==='activo'&&m.cant-m.devuelto>0);
   const hist=db.movements.filter(m=>m.artId===id).sort((x,y)=>y.fecha.localeCompare(x.fecha));
-  document.getElementById('detalle-body').innerHTML=`<div class="modal-grab"></div><div class="modal-title">${TIPOS[a.tipo].l}: ${esc(a.nombre)}</div><div class="modal-subtitle">${esc(a.codigo||'s/código')}</div><div class="kpi-grid" style="margin-bottom:20px"><div class="kpi-card"><div class="value">${disp}</div><div class="label">En almacén</div></div><div class="kpi-card warning"><div class="value">${asig}</div><div class="label">Asignados fuera</div></div></div><div class="section-title">📤 En circulación</div>${asigs.length?asigs.map(m=>`<div class="movement-item"><div class="movement-info"><div class="name">👤 ${esc(persona(m.personaId))}</div><div class="meta">📍 ${esc(m.ubic)} · desde ${fmt(m.fecha)}</div></div><div class="movement-amount">${m.cant-m.devuelto} ${esc(a.unidad)}</div></div>`).join(''):'<p style="color:var(--text-muted);font-size:13px;padding:12px 0">Nada asignado actualmente.</p>'}<div class="section-title mt-4">🕒 Historial</div>${hist.map(m=>{const badgeClass=m.tipo==='entrada'||m.tipo==='devolucion'?'badge-entrada':m.tipo==='consumo'?'badge-consumo':'badge-salida';const amountClass=(m.tipo==='entrada'||m.tipo==='devolucion')?'amount-positive':'amount-negative';const sign=(m.tipo==='entrada'||m.tipo==='devolucion')?'+':'-';return `<div class="movement-item"><span class="movement-badge ${badgeClass}">${m.tipo.toUpperCase()}</span><div class="movement-info"><div class="meta">${fmt(m.fecha)} · ${esc(m.user||'—')}</div></div><div class="movement-amount ${amountClass}">${sign}${m.cant}</div></div>`}).join('')}<button class="btn-primary mt-4" style="background:var(--danger)" onclick="closeM('ov-detalle');confirmarEliminarArticulo('${a.id}')">🗑️ Eliminar este artículo</button><button class="btn-secondary" onclick="closeM('ov-detalle')">Cerrar</button>`;
+  document.getElementById('detalle-body').innerHTML=`<div class="modal-grab"></div><div class="modal-title">${TIPOS[a.tipo].l}: ${esc(a.nombre)}</div><div class="modal-subtitle">${esc(a.codigo||'s/código')}</div><div class="kpi-grid" style="margin-bottom:20px"><div class="kpi-card"><div class="value">${disp}</div><div class="label">En almacén</div></div><div class="kpi-card warning"><div class="value">${asig}</div><div class="label">Asignados fuera</div></div></div><div class="section-title">📤 En circulación</div>${asigs.length?asigs.map(m=>`<div class="movement-item" onclick="closeM('ov-detalle');verDetalleMovimiento('${m.id}')"><div class="movement-info"><div class="name">👤 ${esc(persona(m.personaId))}</div><div class="meta">📍 ${esc(m.ubic)} · desde ${fmt(m.fecha)}</div></div><div class="movement-amount">${m.cant-m.devuelto} ${esc(a.unidad)}</div></div>`).join(''):'<p style="color:var(--text-muted);font-size:13px;padding:12px 0">Nada asignado actualmente.</p>'}<div class="section-title mt-4">🕒 Historial</div>${hist.map(m=>{const badgeClass=m.tipo==='entrada'||m.tipo==='devolucion'?'badge-entrada':m.tipo==='consumo'?'badge-consumo':'badge-salida';const amountClass=(m.tipo==='entrada'||m.tipo==='devolucion')?'amount-positive':'amount-negative';const sign=(m.tipo==='entrada'||m.tipo==='devolucion')?'+':'-';return `<div class="movement-item" onclick="closeM('ov-detalle');verDetalleMovimiento('${m.id}')"><span class="movement-badge ${badgeClass}">${m.tipo.toUpperCase()}</span><div class="movement-info"><div class="meta">${fmt(m.fecha)} · ${esc(m.user||'—')}</div></div><div class="movement-amount ${amountClass}">${sign}${m.cant}</div></div>`}).join('')}<button class="btn-primary mt-4" style="background:var(--danger)" onclick="closeM('ov-detalle');confirmarEliminarArticulo('${a.id}')">🗑️ Eliminar este artículo</button><button class="btn-secondary" onclick="closeM('ov-detalle')">Cerrar</button>`;
   openM('ov-detalle');
 }
 
