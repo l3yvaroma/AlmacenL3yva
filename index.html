@@ -126,6 +126,8 @@ body{background:var(--page);color:var(--txt);display:flex;justify-content:center
 .sel-bar #sel-count{flex:1;font-size:12px;color:var(--soft)}
 .chk{display:flex;align-items:center;flex-shrink:0}
 .chk input{width:20px;height:20px;accent-color:var(--primary);cursor:pointer}
+.del-btn{background:none;border:none;font-size:18px;cursor:pointer;padding:4px 6px;border-radius:8px;opacity:.55;flex-shrink:0}
+.del-btn:hover,.del-btn:active{opacity:1;background:var(--red-l)}
 </style>
 </head>
 <body>
@@ -133,7 +135,7 @@ body{background:var(--page);color:var(--txt);display:flex;justify-content:center
   <div class="statusbar"><span id="clock">--:--</span><span>📶 🔋</span></div>
   <div class="appbar">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-      <h1>📦 L3yvaV1.0</h1>
+      <h1>📦 AlmacénPro</h1>
       <button class="xl-btn" onclick="exportExcel()">⬇ Excel</button>
     </div>
     <p id="appbar-sub">Inventario · Asignación · Trazabilidad</p>
@@ -169,7 +171,7 @@ body{background:var(--page);color:var(--txt);display:flex;justify-content:center
         <label class="sel-all"><input type="checkbox" id="sel-todos" onchange="toggleSelTodos()"> Todos</label>
         <span id="sel-count"></span>
         <button class="btn mini ghost" onclick="salirSeleccion()">Cancelar</button>
-        <button class="btn mini danger" id="btn-eliminar" onclick="confirmarEliminar()">🗑️ Eliminar</button>
+        <button class="btn mini danger" id="btn-eliminar" onclick="confirmarEliminarMov()">🗑️ Eliminar</button>
       </div>
       <div id="lista-historial"></div>
       <button class="btn ghost" id="btn-sel" onclick="entrarSeleccion()" style="margin-top:12px">🗑️ Seleccionar movimientos para eliminar</button>
@@ -308,10 +310,10 @@ body{background:var(--page);color:var(--txt);display:flex;justify-content:center
 
   <div class="overlay" id="ov-confirm"><div class="sheet">
     <div class="grab"></div>
-    <h3>⚠️ Confirmar eliminación</h3>
+    <h3 id="conf-title">⚠️ Confirmar</h3>
     <p class="sub" id="conf-msg"></p>
-    <div class="hint">El stock disponible y los artículos asignados se recalcularán automáticamente para que el inventario quede cuadrado.</div>
-    <button class="btn danger" onclick="ejecutarEliminar()">Sí, eliminar</button>
+    <div class="hint" id="conf-hint"></div>
+    <button class="btn danger" id="conf-btn" onclick="">Sí, eliminar</button>
     <button class="btn ghost" onclick="closeM('ov-confirm')">Cancelar</button>
   </div></div>
 
@@ -370,6 +372,7 @@ function persona(id){const p=db.people.find(x=>x.id===id);return p?p.nombre:'—
 function articulo(id){return db.articles.find(x=>x.id===id)}
 const SUBS={inicio:'Inventario · Asignación · Trazabilidad',articulos:'Catálogo de artículos',asignados:'Artículos en circulación y devoluciones',personas:'Qué tiene cada responsable',historial:'Registro completo de movimientos'};
 function go(s){
+  if(modoSeleccion)salirSeleccion();
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
   document.getElementById('scr-'+s).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(x=>x.classList.toggle('active',x.dataset.s===s));
@@ -388,6 +391,53 @@ function accion(tipo){
 function openM(id){document.getElementById(id).classList.add('open')}
 function closeM(id){document.getElementById(id).classList.remove('open')}
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+
+/* ═══════ CONFIRMACIÓN GENÉRICA ═══════ */
+function pedirConfirmacion(titulo,msg,hint,accionFn){
+  document.getElementById('conf-title').textContent=titulo;
+  document.getElementById('conf-msg').textContent=msg;
+  document.getElementById('conf-hint').textContent=hint;
+  document.getElementById('conf-hint').style.display=hint?'block':'none';
+  const btn=document.getElementById('conf-btn');
+  btn.onclick=function(){closeM('ov-confirm');accionFn()};
+  openM('ov-confirm');
+}
+
+/* ═══════ ELIMINAR ARTÍCULO ═══════ */
+function confirmarEliminarArticulo(id){
+  const a=articulo(id);if(!a)return;
+  const movs=db.movements.filter(m=>m.artId===id).length;
+  pedirConfirmacion(
+    '🗑️ Eliminar artículo',
+    'Se eliminará "'+a.nombre+'" y todos sus '+movs+' movimiento'+(movs!==1?'s':'')+' asociados.',
+    'Esta acción no se puede deshacer. El historial de este artículo se borrará por completo.',
+    function(){eliminarArticulo(id)}
+  );
+}
+function eliminarArticulo(id){
+  db.movements=db.movements.filter(m=>m.artId!==id);
+  db.articles=db.articles.filter(a=>a.id!==id);
+  save();renderAll();
+}
+
+/* ═══════ ELIMINAR PERSONA ═══════ */
+function confirmarEliminarPersona(id){
+  const p=db.people.find(x=>x.id===id);if(!p)return;
+  const movs=db.movements.filter(m=>m.personaId===id).length;
+  pedirConfirmacion(
+    '🗑️ Eliminar persona',
+    'Se eliminará a "'+p.nombre+'" y se desvinculará de '+movs+' movimiento'+(movs!==1?'s':'')+'.',
+    'Los movimientos no se borran, solo pierden el nombre del responsable. Esta acción no se puede deshacer.',
+    function(){eliminarPersona(id)}
+  );
+}
+function eliminarPersona(id){
+  db.movements.forEach(m=>{if(m.personaId===id)m.personaId=''});
+  db.people=db.people.filter(p=>p.id!==id);
+  save();renderAll();
+}
+
+/* ═══════ INICIO ═══════ */
 function renderInicio(){
   const arts=db.articles;
   const activos=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo');
@@ -412,6 +462,8 @@ function renderInicio(){
   const ult=[...db.movements].sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,4);
   document.getElementById('ultimos').innerHTML=ult.map(m=>movRow(m)).join('');
 }
+
+/* ═══════ ARTÍCULOS ═══════ */
 function renderTipoChips(){
   const chips=[{v:'todos',l:'Todos'}].concat(Object.entries(TIPOS).map(([v,t])=>({v,l:t.l})));
   document.getElementById('tipo-chips').innerHTML=chips.map(c=>
@@ -425,15 +477,18 @@ function renderArticulos(){
   document.getElementById('lista-articulos').innerHTML=list.length?list.map(a=>{
     const disp=disponibles(a),asig=asignados(a);
     const st=disp<=0?'b-bad':(a.min>0&&disp<=a.min?'b-warn':'b-ok');
-    return '<div class="card row" onclick="verDetalle(\''+a.id+'\')" style="cursor:pointer">'+
-      '<div class="ico" style="background:var(--primary-l)">'+TIPOS[a.tipo].e+'</div>'+
-      '<div class="info"><div class="t">'+esc(a.nombre)+'</div>'+
+    return '<div class="card row">'+
+      '<div class="ico" style="background:var(--primary-l)" onclick="verDetalle(\''+a.id+'\')">'+TIPOS[a.tipo].e+'</div>'+
+      '<div class="info" onclick="verDetalle(\''+a.id+'\')" style="cursor:pointer"><div class="t">'+esc(a.nombre)+'</div>'+
       '<div class="s">'+esc(a.codigo||'s/código')+' · '+esc(a.unidad)+'</div>'+
       '<span class="badge b-'+a.tipo+'">'+TIPOS[a.tipo].l+'</span></div>'+
       '<div class="right"><div class="t">'+disp+' <span style="font-weight:400;color:var(--soft)">dispon.</span></div>'+
-      '<div class="s">'+asig+' asignados</div><span class="badge '+st+'">stock</span></div></div>';
+      '<div class="s">'+asig+' asignados</div><span class="badge '+st+'">stock</span></div>'+
+      '<button class="del-btn" title="Eliminar" onclick="event.stopPropagation();confirmarEliminarArticulo(\''+a.id+'\')">🗑️</button></div>';
   }).join(''):'<div class="empty"><div class="e">📦</div>No se encontraron artículos</div>';
 }
+
+/* ═══════ ASIGNADOS ═══════ */
 function setAsigTab(t){asigTab=t;
   document.getElementById('tab-activos').classList.toggle('active',t==='activos');
   document.getElementById('tab-devueltos').classList.toggle('active',t==='devueltos');
@@ -455,6 +510,8 @@ function renderAsignados(){
   }).join(''):'<div class="empty"><div class="e">'+(asigTab==='activos'?'🎉':'📭')+'</div>'+(asigTab==='activos'?'Nada en circulación':'Sin devoluciones registradas')+'</div>';
 }
 function devolverDesde(id){fillDevolucion(id);openM('ov-devolver')}
+
+/* ═══════ PERSONAS ═══════ */
 function renderPersonas(){
   const q=(document.getElementById('q-per').value||'').toLowerCase();
   const list=db.people.filter(p=>p.nombre.toLowerCase().includes(q));
@@ -466,12 +523,15 @@ function renderPersonas(){
     const cons=consumos.slice(0,6).map(m=>{const a=articulo(m.artId);return '<div class="statline"><span>🧻 '+esc(a?a.nombre:'?')+' · '+fmt(m.fecha)+'</span><b>'+m.cant+'</b></div>'}).join('');
     return '<div class="card"><div class="row"><div class="ico" style="background:var(--blue-l)">👤</div>'+
       '<div class="info"><div class="t">'+esc(p.nombre)+'</div><div class="s">'+esc(p.cargo||'Sin cargo')+'</div></div>'+
-      '<div class="right"><span class="badge '+(tiene.length?'b-warn':'b-ok')+'">'+tiene.length+' por devolver</span></div></div>'+
+      '<div class="right"><span class="badge '+(tiene.length?'b-warn':'b-ok')+'">'+tiene.length+' por devolver</span></div>'+
+      '<button class="del-btn" title="Eliminar" onclick="confirmarEliminarPersona(\''+p.id+'\')">🗑️</button></div>'+
       (tiene.length?'<div class="sec" style="margin-top:10px;font-size:11px">📤 A devolver</div>'+det:'')+
       (consumos.length?'<div class="sec" style="margin-top:10px;font-size:11px">🧻 Recibidos (no devuelven)</div>'+cons:'')+
       '</div>';
   }).join(''):'<div class="empty"><div class="e">👤</div>Sin personas registradas</div>');
 }
+
+/* ═══════ HISTORIAL + SELECCIÓN ═══════ */
 const MOVF={todos:'Todos',entrada:'Entradas',asignacion:'Asignaciones',devolucion:'Devoluciones',consumo:'Consumos'};
 const MOVE={asignacion:{l:'Asignación',e:'📤',c:'var(--amber-l)'},devolucion:{l:'Devolución',e:'📥',c:'var(--green-l)'},consumo:{l:'Consumo',e:'🧻',c:'var(--blue-l)'},entrada:{l:'Entrada',e:'➕',c:'var(--primary-l)'}};
 function renderMovChips(){
@@ -528,21 +588,23 @@ function toggleSelTodos(){
   renderHistorial();
 }
 function actualizarSelBar(){
-  const bar=document.getElementById('sel-bar');
-  if(!bar)return;
+  const bar=document.getElementById('sel-bar');if(!bar)return;
   document.getElementById('sel-count').textContent=seleccionados.size+' seleccionado'+(seleccionados.size!==1?'s':'');
   document.getElementById('btn-eliminar').disabled=seleccionados.size===0;
   const vis=window._visibles||[];
   document.getElementById('sel-todos').checked=vis.length>0&&vis.every(id=>seleccionados.has(id));
 }
-function confirmarEliminar(){
+function confirmarEliminarMov(){
   if(seleccionados.size===0)return;
-  document.getElementById('conf-msg').textContent='Se eliminarán '+seleccionados.size+' movimiento'+(seleccionados.size!==1?'s':'')+'. Esta acción no se puede deshacer.';
-  openM('ov-confirm');
+  pedirConfirmacion(
+    '⚠️ Eliminar movimientos',
+    'Se eliminarán '+seleccionados.size+' movimiento'+(seleccionados.size!==1?'s':'')+'.',
+    'El stock disponible y los asignados se recalcularán automáticamente para que el inventario quede cuadrado.',
+    function(){ejecutarEliminarMov()}
+  );
 }
-function ejecutarEliminar(){
+function ejecutarEliminarMov(){
   eliminarMovimientos([...seleccionados]);
-  closeM('ov-confirm');
   salirSeleccion();
 }
 function eliminarMovimientos(idsSel){
@@ -551,10 +613,8 @@ function eliminarMovimientos(idsSel){
     db.movements.filter(d=>d.tipo==='devolucion'&&d.ref===a.id).forEach(d=>ids.add(d.id));
   });
   ids.forEach(id=>{
-    const m=db.movements.find(x=>x.id===id);
-    if(!m)return;
-    const a=articulo(m.artId);
-    if(!a)return;
+    const m=db.movements.find(x=>x.id===id);if(!m)return;
+    const a=articulo(m.artId);if(!a)return;
     if(m.tipo==='entrada')a.total=Math.max(0,a.total-m.cant);
     else if(m.tipo==='consumo')a.total+=m.cant;
     else if(m.tipo==='devolucion'){
@@ -568,9 +628,10 @@ function eliminarMovimientos(idsSel){
     }
   });
   db.movements=db.movements.filter(m=>!ids.has(m.id));
-  save();
-  renderAll();
+  save();renderAll();
 }
+
+/* ═══════ DETALLE ARTÍCULO ═══════ */
 function verDetalle(id){
   const a=articulo(id);const disp=disponibles(a),asig=asignados(a);
   const asigs=db.movements.filter(m=>m.artId===id&&m.tipo==='asignacion'&&m.estado==='activo'&&m.cant-m.devuelto>0);
@@ -585,9 +646,12 @@ function verDetalle(id){
     (asigs.length?asigs.map(m=>'<div class="statline"><span>👤 '+esc(persona(m.personaId))+'<br><small style="color:var(--soft)">📍 '+esc(m.ubic)+' · desde '+fmt(m.fecha)+'</small></span><b>'+(m.cant-m.devuelto)+' '+esc(a.unidad)+'</b></div>').join(''):'<p style="font-size:12px;color:var(--soft)">Nada asignado actualmente.</p>')+
     '<div class="sec" style="margin-top:14px">🕒 Historial</div>'+
     hist.map(m=>movRow(m)).join('')+
+    '<button class="btn danger" style="margin-top:14px" onclick="closeM(\'ov-detalle\');confirmarEliminarArticulo(\''+a.id+'\')">🗑️ Eliminar este artículo</button>'+
     '<button class="btn ghost" onclick="closeM(\'ov-detalle\')">Cerrar</button>';
   openM('ov-detalle');
 }
+
+/* ═══════ FORMULARIOS ═══════ */
 function openArticulo(){['art-id','art-nombre','art-codigo','art-unidad'].forEach(i=>document.getElementById(i).value='');
   document.getElementById('art-total').value=0;document.getElementById('art-min').value=0;
   document.getElementById('art-tipo').value='consumible';openM('ov-articulo');}
@@ -607,8 +671,7 @@ function saveArticulo(){
 function fillEntrada(){
   const sel=document.getElementById('en-art');
   sel.innerHTML='<option value="">Selecciona artículo...</option>'+db.articles.map(a=>'<option value="'+a.id+'">'+esc(a.nombre)+' — stock: '+a.total+'</option>').join('');
-  document.getElementById('en-fecha').value=today();
-  document.getElementById('en-cant').value=1;
+  document.getElementById('en-fecha').value=today();document.getElementById('en-cant').value=1;
   document.getElementById('en-art-info').innerHTML='';
   document.getElementById('en-notas').value='';document.getElementById('en-user').value='';
   document.getElementById('en-motivo').value='Compra';
@@ -620,12 +683,9 @@ function showEnArtInfo(){
   box.innerHTML='<div class="hint">Stock actual: <b>'+a.total+' '+esc(a.unidad)+'</b> · En almacén: '+disponibles(a)+' · Asignados fuera: '+asignados(a)+'</div>';
 }
 function saveEntrada(){
-  const artId=document.getElementById('en-art').value;
-  if(!artId){alert('Selecciona un artículo');return}
-  const cant=parseInt(document.getElementById('en-cant').value)||0;
-  if(cant<=0){alert('Cantidad inválida');return}
-  const a=articulo(artId);
-  a.total+=cant;
+  const artId=document.getElementById('en-art').value;if(!artId){alert('Selecciona un artículo');return}
+  const cant=parseInt(document.getElementById('en-cant').value)||0;if(cant<=0){alert('Cantidad inválida');return}
+  const a=articulo(artId);a.total+=cant;
   db.movements.push({id:uid(),artId,tipo:'entrada',cant,personaId:'',ubic:'Almacén',
     fecha:document.getElementById('en-fecha').value||today(),devuelto:0,estado:'ok',
     user:document.getElementById('en-user').value.trim(),
@@ -637,9 +697,8 @@ function fillAsignar(){
   sel.innerHTML='<option value="">Selecciona artículo...</option>'+db.articles.map(a=>{const d=disponibles(a);return '<option value="'+a.id+'" '+(d<=0?'disabled':'')+'>'+esc(a.nombre)+' — disp: '+d+'</option>'}).join('');
   document.getElementById('as-persona').innerHTML='<option value="">Selecciona...</option>'+db.people.map(p=>'<option value="'+p.id+'">'+esc(p.nombre)+'</option>').join('');
   document.getElementById('as-ubic').innerHTML='<option value="">Selecciona...</option>'+UBIC.map(u=>'<option>'+u+'</option>').join('');
-  document.getElementById('as-fecha').value=today();
-  document.getElementById('as-cant').value=1;document.getElementById('as-art-info').innerHTML='';
-  document.getElementById('as-notas').value='';document.getElementById('as-user').value='';
+  document.getElementById('as-fecha').value=today();document.getElementById('as-cant').value=1;
+  document.getElementById('as-art-info').innerHTML='';document.getElementById('as-notas').value='';document.getElementById('as-user').value='';
 }
 function showAsArtInfo(){
   const id=document.getElementById('as-art').value;const box=document.getElementById('as-art-info');
@@ -648,10 +707,8 @@ function showAsArtInfo(){
   box.innerHTML='<div class="hint">Disponibles en almacén: <b>'+disponibles(a)+' '+esc(a.unidad)+'</b> · Total: '+a.total+' · Asignados: '+asignados(a)+'</div>';
 }
 function saveAsignacion(){
-  const artId=document.getElementById('as-art').value;
-  const personaId=document.getElementById('as-persona').value;
-  const ubic=document.getElementById('as-ubic').value;
-  const cant=parseInt(document.getElementById('as-cant').value)||0;
+  const artId=document.getElementById('as-art').value;const personaId=document.getElementById('as-persona').value;
+  const ubic=document.getElementById('as-ubic').value;const cant=parseInt(document.getElementById('as-cant').value)||0;
   if(!artId||!personaId||!ubic){alert('Completa artículo, responsable y ubicación');return}
   const a=articulo(artId);const disp=disponibles(a);
   if(cant<=0){alert('Cantidad inválida');return}
@@ -667,8 +724,7 @@ function fillDevolucion(preId){
   sel.innerHTML='<option value="">Selecciona...</option>'+asigs.map(m=>{const a=articulo(m.artId);
     return '<option value="'+m.id+'" '+(m.id===preId?'selected':'')+'>'+esc(a?a.nombre:'?')+' → '+esc(persona(m.personaId))+' ('+(m.cant-m.devuelto)+')</option>'}).join('');
   document.getElementById('dv-fecha').value=today();document.getElementById('dv-cant').value=1;
-  document.getElementById('dv-notas').value='';document.getElementById('dv-user').value='';
-  showDvInfo();
+  document.getElementById('dv-notas').value='';document.getElementById('dv-user').value='';showDvInfo();
 }
 function showDvInfo(){
   const id=document.getElementById('dv-asig').value;const box=document.getElementById('dv-info');
@@ -678,14 +734,11 @@ function showDvInfo(){
   document.getElementById('dv-cant').max=rest;
 }
 function saveDevolucion(){
-  const id=document.getElementById('dv-asig').value;
-  if(!id){alert('Selecciona una asignación');return}
+  const id=document.getElementById('dv-asig').value;if(!id){alert('Selecciona una asignación');return}
   const m=db.movements.find(x=>x.id===id);const a=articulo(m.artId);
-  const cant=parseInt(document.getElementById('dv-cant').value)||0;
-  const rest=m.cant-m.devuelto;
+  const cant=parseInt(document.getElementById('dv-cant').value)||0;const rest=m.cant-m.devuelto;
   if(cant<=0||cant>rest){alert('La cantidad debe estar entre 1 y '+rest);return}
-  m.devuelto+=cant;
-  if(m.devuelto>=m.cant)m.estado='devuelto';
+  m.devuelto+=cant;if(m.devuelto>=m.cant)m.estado='devuelto';
   db.movements.push({id:uid(),artId:m.artId,tipo:'devolucion',cant,personaId:m.personaId,ref:m.id,
     ubic:'Almacén',fecha:document.getElementById('dv-fecha').value||today(),devuelto:0,estado:'ok',
     user:document.getElementById('dv-user').value.trim(),
@@ -697,9 +750,8 @@ function fillConsumo(){
   sel.innerHTML='<option value="">Selecciona artículo...</option>'+db.articles.map(a=>{const d=disponibles(a);return '<option value="'+a.id+'" '+(d<=0?'disabled':'')+'>'+esc(a.nombre)+' — disp: '+d+'</option>'}).join('');
   document.getElementById('co-persona').innerHTML='<option value="">— Sin responsable —</option>'+db.people.map(p=>'<option value="'+p.id+'">'+esc(p.nombre)+'</option>').join('');
   document.getElementById('co-ubic').innerHTML='<option value="">Selecciona...</option>'+UBIC.map(u=>'<option>'+u+'</option>').join('');
-  document.getElementById('co-fecha').value=today();
-  document.getElementById('co-cant').value=1;document.getElementById('co-art-info').innerHTML='';
-  document.getElementById('co-notas').value='';document.getElementById('co-user').value='';
+  document.getElementById('co-fecha').value=today();document.getElementById('co-cant').value=1;
+  document.getElementById('co-art-info').innerHTML='';document.getElementById('co-notas').value='';document.getElementById('co-user').value='';
 }
 function showCoArtInfo(){
   const id=document.getElementById('co-art').value;const box=document.getElementById('co-art-info');
@@ -708,30 +760,26 @@ function showCoArtInfo(){
   box.innerHTML='<div class="hint">Disponibles: <b>'+disponibles(a)+' '+esc(a.unidad)+'</b>. Esta salida descuenta el stock de forma permanente.</div>';
 }
 function saveConsumo(){
-  const artId=document.getElementById('co-art').value;
-  if(!artId){alert('Selecciona un artículo');return}
-  const a=articulo(artId);
-  const cant=parseInt(document.getElementById('co-cant').value)||0;
-  const disp=disponibles(a);
+  const artId=document.getElementById('co-art').value;if(!artId){alert('Selecciona un artículo');return}
+  const a=articulo(artId);const cant=parseInt(document.getElementById('co-cant').value)||0;const disp=disponibles(a);
   if(cant<=0){alert('Cantidad inválida');return}
   if(cant>disp){alert('Solo hay '+disp+' '+a.unidad+' disponibles');return}
-  const ubic=document.getElementById('co-ubic').value;
-  if(!ubic){alert('Indica el destino');return}
+  const ubic=document.getElementById('co-ubic').value;if(!ubic){alert('Indica el destino');return}
   a.total-=cant;
-  db.movements.push({id:uid(),artId,tipo:'consumo',cant,
-    personaId:document.getElementById('co-persona').value,ubic,
+  db.movements.push({id:uid(),artId,tipo:'consumo',cant,personaId:document.getElementById('co-persona').value,ubic,
     fecha:document.getElementById('co-fecha').value||today(),devuelto:0,estado:'consumido',
     user:document.getElementById('co-user').value.trim(),
     notas:[document.getElementById('co-motivo').value,document.getElementById('co-notas').value.trim()].filter(Boolean).join(' · ')});
   save();closeM('ov-consumo');renderAll();
 }
 function savePersona(){
-  const n=document.getElementById('per-nombre').value.trim();
-  if(!n){alert('El nombre es obligatorio');return}
+  const n=document.getElementById('per-nombre').value.trim();if(!n){alert('El nombre es obligatorio');return}
   db.people.push({id:uid(),nombre:n,cargo:document.getElementById('per-cargo').value.trim()});
   document.getElementById('per-nombre').value='';document.getElementById('per-cargo').value='';
   save();closeM('ov-persona');renderAll();
 }
+
+/* ═══════ EXCEL KARDEX ═══════ */
 function xesc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function cellStr(v,st){return '<Cell'+(st?' ss:StyleID="'+st+'"':'')+'><Data ss:Type="String">'+xesc(v)+'</Data></Cell>'}
 function cellNum(v,st){return '<Cell'+(st?' ss:StyleID="'+st+'"':'')+'><Data ss:Type="Number">'+(Number(v)||0)+'</Data></Cell>'}
@@ -767,8 +815,7 @@ function exportExcel(){
   const pend=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo'&&m.cant-m.devuelto>0);
   let g=[xlRow(['Artículo','Código','Tipo','Responsable','Ubicación','Fecha entrega','Cant. pendiente','Días fuera','Registró','Notas'].map(h=>cellStr(h,'sHead')))];
   [...pend].sort((a,b)=>a.fecha.localeCompare(b.fecha)).forEach(m=>{
-    const a=articulo(m.artId);
-    const dias=Math.floor((new Date()-new Date(m.fecha))/86400000);
+    const a=articulo(m.artId);const dias=Math.floor((new Date()-new Date(m.fecha))/86400000);
     g.push(xlRow([cellStr(a?a.nombre:''),cellStr(a?(a.codigo||''):''),cellStr(a?TIPOS[a.tipo].l:''),cellStr(persona(m.personaId)),cellStr(m.ubic),cellStr(fmt(m.fecha)),cellNum(m.cant-m.devuelto,'sNum'),cellNum(dias,'sNum'),cellStr(m.user||''),cellStr(m.notas||'')]));
   });
   const xml='<?xml version="1.0" encoding="UTF-8"?>\n<?mso-application progid="Excel.Sheet"?>\n'+
@@ -782,12 +829,13 @@ function exportExcel(){
   xlSheet('Resumen',r.join(''))+xlSheet('Kardex',k.join(''))+xlSheet('Asignados',g.join(''))+
   '</Workbook>';
   const blob=new Blob([xml],{type:'application/vnd.ms-excel'});
-  const url=URL.createObjectURL(blob);
-  const link=document.createElement('a');
+  const url=URL.createObjectURL(blob);const link=document.createElement('a');
   link.href=url;link.download='Kardex_AlmacenPro_'+hoy+'.xls';
   document.body.appendChild(link);link.click();
   setTimeout(()=>{document.body.removeChild(link);URL.revokeObjectURL(url)},400);
 }
+
+/* ═══════ GLOBAL ═══════ */
 function renderAll(){renderInicio();renderArticulos();renderAsignados();renderPersonas();renderHistorial()}
 function tick(){const d=new Date();document.getElementById('clock').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
 setInterval(tick,1000);tick();
