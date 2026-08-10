@@ -1,17 +1,51 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#218a63"/>
-      <stop offset="1" stop-color="#12453a"/>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a"/>
+      <stop offset="100%" style="stop-color:#1a1a1a"/>
     </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#39ff14"/>
+      <stop offset="100%" style="stop-color:#2dd4bf"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
-  <rect width="512" height="512" fill="url(#g)"/>
-  <g transform="translate(256 252)">
-    <path d="M0 -104 L136 -36 L136 100 L0 168 L-136 100 L-136 -36 Z" fill="#f1e7d2"/>
-    <path d="M-136 -36 L0 32 L136 -36 L0 -104 Z" fill="#faf3e3"/>
-    <path d="M0 32 L0 168" stroke="#c8b68b" stroke-width="11"/>
-    <path d="M-68 -70 L68 -2" stroke="#dccfa9" stroke-width="7"/>
+  
+  <!-- Fondo -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  
+  <!-- Borde luminoso -->
+  <rect x="8" y="8" width="496" height="496" rx="104" fill="none" stroke="url(#accent)" stroke-width="2" opacity="0.3"/>
+  
+  <!-- Icono de caja/almacén -->
+  <g transform="translate(256, 200)" filter="url(#glow)">
+    <!-- Caja 3D -->
+    <path d="M0 -60 L60 -30 L60 30 L0 60 L-60 30 L-60 -30 Z" fill="none" stroke="url(#accent)" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M0 -60 L0 0 L60 -30" fill="none" stroke="url(#accent)" stroke-width="4" opacity="0.6"/>
+    <path d="M0 0 L-60 -30" fill="none" stroke="url(#accent)" stroke-width="4" opacity="0.6"/>
+    <path d="M0 0 L0 60" fill="none" stroke="url(#accent)" stroke-width="4" opacity="0.6"/>
+    
+    <!-- Flechas de movimiento -->
+    <path d="M-80 -20 L-80 20 M-90 -10 L-80 -20 L-70 -10" fill="none" stroke="url(#accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M80 -20 L80 20 M70 10 L80 20 L90 10" fill="none" stroke="url(#accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <circle cx="352" cy="352" r="62" fill="#3ec48f" stroke="#0d1512" stroke-width="9"/>
-  <path d="M324 352 L346 374 L382 334" stroke="#0d1512" stroke-width="13" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Texto L3yvaINV -->
+  <text x="256" y="340" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="52" font-weight="800" fill="url(#accent)" letter-spacing="-1">
+    L3yvaINV
+  </text>
+  
+  <!-- Subtítulo -->
+  <text x="256" y="380" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="500" fill="#71717a" letter-spacing="2">
+    INVENTORY
+  </text>
+  
+  <!-- Línea decorativa -->
+  <line x1="156" y1="400" x2="356" y2="400" stroke="url(#accent)" stroke-width="2" opacity="0.3"/>
 </svg>
