@@ -88,6 +88,8 @@ body{background:var(--page);color:var(--txt);display:flex;justify-content:center
 .btn{width:100%;padding:14px;border-radius:13px;border:none;background:var(--primary);color:#fff;font-size:14px;font-weight:800;cursor:pointer;margin-top:10px}
 .btn.ghost{background:var(--primary-l);color:var(--primary)}
 .btn.mini{width:auto;padding:8px 14px;font-size:12px;margin-top:0;border-radius:10px}
+.btn.danger{background:var(--red)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
 .field{margin-bottom:13px}
 .field label{font-size:11.5px;font-weight:800;color:var(--soft);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.3px}
 .field input,.field select,.field textarea{width:100%;padding:12px;border-radius:11px;border:1px solid var(--line);font-size:13.5px;outline:none;background:var(--input);color:var(--txt)}
@@ -119,6 +121,11 @@ body{background:var(--page);color:var(--txt);display:flex;justify-content:center
 .acciones .at{flex:1}
 .acciones .at b{display:block;font-size:13px;color:var(--txt)}
 .acciones .at span{font-size:11px;color:var(--soft)}
+.sel-bar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px;flex-wrap:wrap}
+.sel-bar .sel-all{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--txt);cursor:pointer;white-space:nowrap}
+.sel-bar #sel-count{flex:1;font-size:12px;color:var(--soft)}
+.chk{display:flex;align-items:center;flex-shrink:0}
+.chk input{width:20px;height:20px;accent-color:var(--primary);cursor:pointer}
 </style>
 </head>
 <body>
@@ -126,7 +133,7 @@ body{background:var(--page);color:var(--txt);display:flex;justify-content:center
   <div class="statusbar"><span id="clock">--:--</span><span>📶 🔋</span></div>
   <div class="appbar">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-      <h1>📦 AlmacénPro</h1>
+      <h1>📦 L3yvaV1.0</h1>
       <button class="xl-btn" onclick="exportExcel()">⬇ Excel</button>
     </div>
     <p id="appbar-sub">Inventario · Asignación · Trazabilidad</p>
@@ -158,7 +165,14 @@ body{background:var(--page);color:var(--txt);display:flex;justify-content:center
     </div>
     <div class="screen" id="scr-historial">
       <div class="chips" id="mov-chips"></div>
+      <div id="sel-bar" class="sel-bar" style="display:none">
+        <label class="sel-all"><input type="checkbox" id="sel-todos" onchange="toggleSelTodos()"> Todos</label>
+        <span id="sel-count"></span>
+        <button class="btn mini ghost" onclick="salirSeleccion()">Cancelar</button>
+        <button class="btn mini danger" id="btn-eliminar" onclick="confirmarEliminar()">🗑️ Eliminar</button>
+      </div>
       <div id="lista-historial"></div>
+      <button class="btn ghost" id="btn-sel" onclick="entrarSeleccion()" style="margin-top:12px">🗑️ Seleccionar movimientos para eliminar</button>
     </div>
   </div>
   <button class="fab" id="fab" onclick="openFab()">+</button>
@@ -292,6 +306,15 @@ body{background:var(--page);color:var(--txt);display:flex;justify-content:center
 
   <div class="overlay" id="ov-detalle"><div class="sheet" id="detalle-body"></div></div>
 
+  <div class="overlay" id="ov-confirm"><div class="sheet">
+    <div class="grab"></div>
+    <h3>⚠️ Confirmar eliminación</h3>
+    <p class="sub" id="conf-msg"></p>
+    <div class="hint">El stock disponible y los artículos asignados se recalcularán automáticamente para que el inventario quede cuadrado.</div>
+    <button class="btn danger" onclick="ejecutarEliminar()">Sí, eliminar</button>
+    <button class="btn ghost" onclick="closeM('ov-confirm')">Cancelar</button>
+  </div></div>
+
   <div class="navbar">
     <div class="nav-item active" data-s="inicio" onclick="go('inicio')"><span class="n">🏠</span>Inicio</div>
     <div class="nav-item" data-s="articulos" onclick="go('articulos')"><span class="n">📦</span>Artículos</div>
@@ -306,6 +329,7 @@ const KEY='almacenpro_v1';
 const TIPOS={consumible:{l:'Consumible',e:'🧻'},herramienta:{l:'Herramienta',e:'🔧'},equipo:{l:'Equipo',e:'⚙️'},activo_fijo:{l:'Activo fijo',e:'🏷️'},otro:{l:'Otro',e:'📦'}};
 const UBIC=['Almacén','Obra','Frente de trabajo','Oficina','Vehículo','Taller','Otro'];
 let filtroTipo='todos', filtroMov='todos', asigTab='activos';
+let modoSeleccion=false, seleccionados=new Set();
 let db = JSON.parse(localStorage.getItem(KEY)) || seed();
 function seed(){
   return {
@@ -326,7 +350,7 @@ function seed(){
       {id:'m3',artId:'a5',tipo:'asignacion',cant:1,personaId:'p2',ubic:'Oficina',fecha:'2026-07-20',devuelto:0,estado:'activo',user:'Admin',notas:''},
       {id:'m4',artId:'a1',tipo:'consumo',cant:30,personaId:'p3',ubic:'Obra Norte',fecha:'2026-08-09',devuelto:0,estado:'consumido',user:'María Gómez',notas:'Entrega a personal · vaciado de losa'},
       {id:'m5',artId:'a3',tipo:'asignacion',cant:1,personaId:'p1',ubic:'Obra Norte',fecha:'2026-07-30',devuelto:1,estado:'devuelto',user:'María Gómez',notas:''},
-      {id:'m6',artId:'a3',tipo:'devolucion',cant:1,personaId:'p1',ubic:'Almacén',fecha:'2026-08-10',devuelto:0,estado:'ok',user:'María Gómez',notas:'Buen estado'}
+      {id:'m6',artId:'a3',tipo:'devolucion',cant:1,personaId:'p1',ubic:'Almacén',fecha:'2026-08-10',devuelto:0,estado:'ok',user:'María Gómez',notas:'Buen estado',ref:'m5'}
     ]
   };
 }
@@ -454,18 +478,98 @@ function renderMovChips(){
   document.getElementById('mov-chips').innerHTML=Object.entries(MOVF).map(([v,l])=>
     '<div class="chip '+(filtroMov===v?'active':'')+'" onclick="filtroMov=\''+v+'\';renderHistorial()">'+l+'</div>').join('');
 }
-function movRow(m){
+function movInner(m){
   const a=articulo(m.artId);const k=MOVE[m.tipo]||MOVE.entrada;
   const per=m.personaId?('👤 '+esc(persona(m.personaId))+' · '):'';
-  return '<div class="card row"><div class="ico" style="background:'+k.c+'">'+k.e+'</div>'+
+  return '<div class="ico" style="background:'+k.c+'">'+k.e+'</div>'+
     '<div class="info"><div class="t">'+esc(a?a.nombre:'?')+' <span style="color:var(--soft);font-weight:400">×'+m.cant+'</span></div>'+
     '<div class="s">'+k.l+' · '+per+'📍 '+esc(m.ubic)+'</div>'+
-    '<div class="s">📅 '+fmt(m.fecha)+' · ✍️ '+esc(m.user||'—')+(m.notas?' · 📝 '+esc(m.notas):'')+'</div></div></div>';
+    '<div class="s">📅 '+fmt(m.fecha)+' · ✍️ '+esc(m.user||'—')+(m.notas?' · 📝 '+esc(m.notas):'')+'</div></div>';
 }
+function movRow(m){return '<div class="card row">'+movInner(m)+'</div>'}
 function renderHistorial(){
   renderMovChips();
   let list=[...db.movements].filter(m=>filtroMov==='todos'||m.tipo===filtroMov).sort((a,b)=>b.fecha.localeCompare(a.fecha));
-  document.getElementById('lista-historial').innerHTML=list.length?list.map(movRow).join(''):'<div class="empty"><div class="e">📋</div>Sin movimientos</div>';
+  window._visibles=list.map(m=>m.id);
+  let html;
+  if(list.length){
+    html=list.map(m=>{
+      if(modoSeleccion){
+        const chk='<label class="chk"><input type="checkbox" '+(seleccionados.has(m.id)?'checked':'')+' onchange="toggleSel(\''+m.id+'\')"></label>';
+        return '<div class="card row">'+chk+movInner(m)+'</div>';
+      }
+      return movRow(m);
+    }).join('');
+  } else {
+    html='<div class="empty"><div class="e">📋</div>Sin movimientos</div>';
+  }
+  document.getElementById('lista-historial').innerHTML=html;
+  actualizarSelBar();
+}
+function entrarSeleccion(){
+  modoSeleccion=true;seleccionados.clear();
+  document.getElementById('sel-bar').style.display='flex';
+  document.getElementById('btn-sel').style.display='none';
+  renderHistorial();
+}
+function salirSeleccion(){
+  modoSeleccion=false;seleccionados.clear();
+  document.getElementById('sel-bar').style.display='none';
+  document.getElementById('btn-sel').style.display='block';
+  renderHistorial();
+}
+function toggleSel(id){
+  if(seleccionados.has(id))seleccionados.delete(id);else seleccionados.add(id);
+  actualizarSelBar();
+}
+function toggleSelTodos(){
+  const c=document.getElementById('sel-todos').checked;
+  (window._visibles||[]).forEach(id=>{if(c)seleccionados.add(id);else seleccionados.delete(id)});
+  renderHistorial();
+}
+function actualizarSelBar(){
+  const bar=document.getElementById('sel-bar');
+  if(!bar)return;
+  document.getElementById('sel-count').textContent=seleccionados.size+' seleccionado'+(seleccionados.size!==1?'s':'');
+  document.getElementById('btn-eliminar').disabled=seleccionados.size===0;
+  const vis=window._visibles||[];
+  document.getElementById('sel-todos').checked=vis.length>0&&vis.every(id=>seleccionados.has(id));
+}
+function confirmarEliminar(){
+  if(seleccionados.size===0)return;
+  document.getElementById('conf-msg').textContent='Se eliminarán '+seleccionados.size+' movimiento'+(seleccionados.size!==1?'s':'')+'. Esta acción no se puede deshacer.';
+  openM('ov-confirm');
+}
+function ejecutarEliminar(){
+  eliminarMovimientos([...seleccionados]);
+  closeM('ov-confirm');
+  salirSeleccion();
+}
+function eliminarMovimientos(idsSel){
+  let ids=new Set(idsSel);
+  db.movements.filter(m=>m.tipo==='asignacion'&&ids.has(m.id)).forEach(a=>{
+    db.movements.filter(d=>d.tipo==='devolucion'&&d.ref===a.id).forEach(d=>ids.add(d.id));
+  });
+  ids.forEach(id=>{
+    const m=db.movements.find(x=>x.id===id);
+    if(!m)return;
+    const a=articulo(m.artId);
+    if(!a)return;
+    if(m.tipo==='entrada')a.total=Math.max(0,a.total-m.cant);
+    else if(m.tipo==='consumo')a.total+=m.cant;
+    else if(m.tipo==='devolucion'){
+      let p=null;
+      if(m.ref)p=db.movements.find(x=>x.id===m.ref&&x.tipo==='asignacion');
+      if(!p)p=db.movements.filter(x=>x.tipo==='asignacion'&&x.artId===m.artId&&x.personaId===m.personaId&&x.devuelto>0&&!ids.has(x.id)).sort((x,y)=>y.fecha.localeCompare(x.fecha))[0];
+      if(p&&!ids.has(p.id)){
+        p.devuelto=Math.max(0,p.devuelto-m.cant);
+        p.estado=(p.devuelto>=p.cant)?'devuelto':'activo';
+      }
+    }
+  });
+  db.movements=db.movements.filter(m=>!ids.has(m.id));
+  save();
+  renderAll();
 }
 function verDetalle(id){
   const a=articulo(id);const disp=disponibles(a),asig=asignados(a);
@@ -582,7 +686,7 @@ function saveDevolucion(){
   if(cant<=0||cant>rest){alert('La cantidad debe estar entre 1 y '+rest);return}
   m.devuelto+=cant;
   if(m.devuelto>=m.cant)m.estado='devuelto';
-  db.movements.push({id:uid(),artId:m.artId,tipo:'devolucion',cant,personaId:m.personaId,
+  db.movements.push({id:uid(),artId:m.artId,tipo:'devolucion',cant,personaId:m.personaId,ref:m.id,
     ubic:'Almacén',fecha:document.getElementById('dv-fecha').value||today(),devuelto:0,estado:'ok',
     user:document.getElementById('dv-user').value.trim(),
     notas:[document.getElementById('dv-estado').value,document.getElementById('dv-notas').value.trim()].filter(Boolean).join(' · ')});
