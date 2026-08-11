@@ -11,7 +11,59 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
+/* ═══════ ALINEADO Y SIMETRÍA (parche) ═══════ */
+.header{display:flex;align-items:center}
+.header h1{line-height:1}
+.header-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;padding:0;flex:0 0 38px;width:38px;height:38px}
+.icon-btn svg{display:block;width:19px;height:19px}
+.user-chip{display:inline-flex;align-items:center;gap:6px;line-height:1}
+.user-chip .dot{flex:0 0 8px;width:8px;height:8px}
+
+.bottom-nav{display:flex;align-items:flex-end;justify-content:space-between;gap:2px;padding:10px 8px 22px}
+.nav-item{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;padding:6px 2px 0}
+.nav-item svg{display:block;width:22px;height:22px}
+.nav-item span{display:block;line-height:1;text-align:center}
+.nav-item.fab-nav{margin-top:-30px;justify-content:flex-end}
+.nav-item.fab-nav .fab-circle{display:flex;align-items:center;justify-content:center;width:48px;height:48px}
+.nav-item.fab-circle svg,.nav-item.fab-nav .fab-circle svg{display:block;width:24px;height:24px}
+
+.kpi-card{display:flex;flex-direction:column;align-items:flex-start}
+.kpi-card .icon{display:flex;align-items:center;justify-content:center;width:32px;height:32px}
+.kpi-card .icon svg{display:block}
+.kpi-card .value{line-height:1.1}
+.kpi-card .label{line-height:1.2}
+
+.movement-item{align-items:center}
+.movement-item .movement-badge{flex:0 0 auto;align-self:center}
+.movement-item .movement-amount{flex:0 0 auto;align-self:center}
+.list-checkbox{align-self:center;flex:0 0 22px}
+
+.article-header{align-items:center}
+.article-icon{display:flex;align-items:center;justify-content:center;flex:0 0 48px;width:48px;height:48px}
+.article-icon svg{display:block;width:24px;height:24px}
+.article-delete{display:inline-flex;align-items:center;justify-content:center;flex:0 0 32px;width:32px;height:32px}
+.article-delete svg{display:block;width:18px;height:18px}
+
+.person-header{align-items:center}
+.person-avatar{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px}
+.person-badge{align-self:center}
+
+.search-bar{align-items:center}
+.search-bar svg{display:block;flex:0 0 18px;width:18px;height:18px}
+
+.tabs{align-items:stretch}
+.tab{display:flex;align-items:center;justify-content:center}
+
+.sync-bar{align-items:center}
+.sync-bar .dot{flex:0 0 8px;width:8px;height:8px}
+
+.ai-input-area{align-items:stretch}
+.ai-send{display:flex;align-items:center;justify-content:center}
+.btn-primary,.btn-secondary{display:flex;align-items:center;justify-content:center;text-align:center}
+.detail-row{align-items:center}
+.article-stats{align-items:flex-start}
+.stat{display:flex;flex-direction:column;align-items:flex-start}<style>
 :root{--bg:#000;--surface:#0a0a0a;--card:#141414;--card-hover:#1a1a1a;--border:#262626;--text:#fff;--text-secondary:#a1a1aa;--text-muted:#71717a;--accent:#39ff14;--accent-dim:#2dd4bf;--accent-glow:rgba(57,255,20,.15);--danger:#ef4444;--warning:#f59e0b;--success:#22c55e;--radius:16px;--radius-sm:12px;--radius-xs:8px}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--text);display:flex;justify-content:center;min-height:100vh}
