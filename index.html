@@ -632,6 +632,42 @@ function openAI(){
   document.getElementById('ai-input').focus();
 }
 
+async function llamarQwen(prompt){
+  const intentos=[
+    {tipo:'openai',url:'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions',model:'qwen-plus'},
+    {tipo:'openai',url:'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions',model:'qwen-turbo'},
+    {tipo:'openai',url:'https://ws-codv7e1dfpvk7kl6.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions',model:'qwen-plus'},
+    {tipo:'anthropic',url:'https://ws-codv7e1dfpvk7kl6.ap-southeast-1.maas.aliyuncs.com/apps/anthropic/v1/messages',model:'qwen-plus'}
+  ];
+  let lastErr='';
+  for(const it of intentos){
+    try{
+      let headers,body,parse;
+      if(it.tipo==='openai'){
+        headers={'Content-Type':'application/json','Authorization':'Bearer '+QWEN_KEY};
+        body=JSON.stringify({model:it.model,messages:[{role:'user',content:prompt}],temperature:0.2});
+        parse=d=>(d.choices&&d.choices[0]&&d.choices[0].message)?d.choices[0].message.content:'';
+      }else{
+        headers={'Content-Type':'application/json','x-api-key':QWEN_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};
+        body=JSON.stringify({model:it.model,max_tokens:1024,messages:[{role:'user',content:prompt}]});
+        parse=d=>(d.content&&d.content[0])?d.content[0].text:'';
+      }
+      const r=await fetch(it.url,{method:'POST',headers:headers,body:body});
+      if(r.ok){
+        const d=await r.json();
+        const t=parse(d);
+        if(t)return{ok:true,text:t};
+        lastErr='Respuesta vacía';
+      }else{
+        lastErr='HTTP '+r.status;
+      }
+    }catch(e){
+      lastErr='Red/CORS';
+    }
+  }
+  return{ok:false,error:lastErr};
+}
+
 async function sendAI(){
   const input=document.getElementById('ai-input');
   const msg=input.value.trim();
@@ -647,15 +683,12 @@ async function sendAI(){
 
   const prompt='Eres el asistente de inventario L3yvaINV. Analiza el mensaje y responde SOLO con un JSON válido (sin texto extra) con este formato: {"tipo":"entrada|asignacion|consumo|devolucion","articulo":"...","cantidad":N,"persona":"...","ubicacion":"...","error":"..."}. Usa "error" solo si no se entiende o falta un dato crítico. Artículos conocidos: '+db.articles.map(a=>a.nombre).join(', ')+'. Personas conocidas: '+db.people.map(p=>p.nombre).join(', ')+'. Ubicaciones válidas: '+UBIC.join(', ')+'. Mensaje: "'+msg+'"';
 
-  try{
-    const response=await fetch('https://ws-codv7e1dfpvk7kl6.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+QWEN_KEY},
-      body:JSON.stringify({model:'qwen-plus',messages:[{role:'user',content:prompt}],temperature:0.2})
-    });
-    if(!response.ok)throw new Error('HTTP '+response.status);
-    const data=await response.json();
-    const aiText=(data.choices&&data.choices[0]&&data.choices[0].message)?data.choices[0].message.content:'';
+  const res=await llamarQwen(prompt);
+
+  if(!res.ok){
+    chat.innerHTML+='<div class="ai-msg system">⚠️ No se pudo conectar con la IA. Detalle: '+esc(res.error)+'<br>Copia este detalle y envíaselo a tu asistente.</div>';
+  }else{
+    const aiText=res.text;
     let parsed=null;
     try{parsed=JSON.parse(aiText.replace(/```json/gi,'').replace(/```/g,'').trim())}catch(e){}
 
@@ -692,7 +725,7 @@ async function sendAI(){
             chat.innerHTML+='<div class="ai-msg system">✅ Consumo: -'+cant+' '+esc(art.nombre)+'</div>';
           }
         }else if(parsed.tipo==='devolucion'){
-          const cand=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo'&&m.artId===art.id&&(!per||m.personaId===per.id)).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];
+          const cand=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo'&&m.artId===art.id&&(!per||m.personaId===per.id)).sort((a,b)=>b.fecha.localeCompare(a.date||b.fecha))[0];
           if(!cand){chat.innerHTML+='<div class="ai-msg system">⚠️ No hay asignación activa de '+esc(art.nombre)+' para devolver.</div>';}
           else{
             const dev=Math.min(cant,cand.cant-cand.devuelto);
@@ -706,8 +739,6 @@ async function sendAI(){
         save();renderAll();
       }
     }
-  }catch(e){
-    chat.innerHTML+='<div class="ai-msg system">⚠️ No se pudo conectar con la IA. Verifica tu key, tu conexión, o que el endpoint corresponda a tu región.</div>';
   }
 
   sendBtn.disabled=false;sendBtn.textContent='Enviar';
