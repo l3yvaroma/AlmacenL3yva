@@ -11,60 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-/* ═══════ ALINEADO Y SIMETRÍA (parche) ═══════ */
-.header{display:flex;align-items:center}
-.header h1{line-height:1}
-.header-actions{display:flex;align-items:center;gap:8px}
-.icon-btn{display:inline-flex;align-items:center;justify-content:center;padding:0;flex:0 0 38px;width:38px;height:38px}
-.icon-btn svg{display:block;width:19px;height:19px}
-.user-chip{display:inline-flex;align-items:center;gap:6px;line-height:1}
-.user-chip .dot{flex:0 0 8px;width:8px;height:8px}
-
-.bottom-nav{display:flex;align-items:flex-end;justify-content:space-between;gap:2px;padding:10px 8px 22px}
-.nav-item{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;padding:6px 2px 0}
-.nav-item svg{display:block;width:22px;height:22px}
-.nav-item span{display:block;line-height:1;text-align:center}
-.nav-item.fab-nav{margin-top:-30px;justify-content:flex-end}
-.nav-item.fab-nav .fab-circle{display:flex;align-items:center;justify-content:center;width:48px;height:48px}
-.nav-item.fab-circle svg,.nav-item.fab-nav .fab-circle svg{display:block;width:24px;height:24px}
-
-.kpi-card{display:flex;flex-direction:column;align-items:flex-start}
-.kpi-card .icon{display:flex;align-items:center;justify-content:center;width:32px;height:32px}
-.kpi-card .icon svg{display:block}
-.kpi-card .value{line-height:1.1}
-.kpi-card .label{line-height:1.2}
-
-.movement-item{align-items:center}
-.movement-item .movement-badge{flex:0 0 auto;align-self:center}
-.movement-item .movement-amount{flex:0 0 auto;align-self:center}
-.list-checkbox{align-self:center;flex:0 0 22px}
-
-.article-header{align-items:center}
-.article-icon{display:flex;align-items:center;justify-content:center;flex:0 0 48px;width:48px;height:48px}
-.article-icon svg{display:block;width:24px;height:24px}
-.article-delete{display:inline-flex;align-items:center;justify-content:center;flex:0 0 32px;width:32px;height:32px}
-.article-delete svg{display:block;width:18px;height:18px}
-
-.person-header{align-items:center}
-.person-avatar{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px}
-.person-badge{align-self:center}
-
-.search-bar{align-items:center}
-.search-bar svg{display:block;flex:0 0 18px;width:18px;height:18px}
-
-.tabs{align-items:stretch}
-.tab{display:flex;align-items:center;justify-content:center}
-
-.sync-bar{align-items:center}
-.sync-bar .dot{flex:0 0 8px;width:8px;height:8px}
-
-.ai-input-area{align-items:stretch}
-.ai-send{display:flex;align-items:center;justify-content:center}
-.btn-primary,.btn-secondary{display:flex;align-items:center;justify-content:center;text-align:center}
-.detail-row{align-items:center}
-.article-stats{align-items:flex-start}
-.stat{display:flex;flex-direction:column;align-items:flex-start}
-  <style>
+<style>
 :root{--bg:#000;--surface:#0a0a0a;--card:#141414;--card-hover:#1a1a1a;--border:#262626;--text:#fff;--text-secondary:#a1a1aa;--text-muted:#71717a;--accent:#39ff14;--accent-dim:#2dd4bf;--accent-glow:rgba(57,255,20,.15);--danger:#ef4444;--warning:#f59e0b;--success:#22c55e;--radius:16px;--radius-sm:12px;--radius-xs:8px}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--text);display:flex;justify-content:center;min-height:100vh}
@@ -207,6 +154,50 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .solo-lectura .fab-nav,.solo-lectura .article-delete,.solo-lectura #btn-sel{display:none!important}
 .text-accent{color:var(--accent)}
 .mt-4{margin-top:16px}.mb-4{margin-bottom:16px}
+/* ═══════ PARCHE: ALINEADO Y SIMETRÍA ═══════ */
+.header{display:flex;align-items:center}
+.header h1{line-height:1}
+.header-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;padding:0;flex:0 0 38px;width:38px;height:38px}
+.icon-btn svg{display:block;width:19px;height:19px}
+.user-chip{display:inline-flex;align-items:center;gap:6px;line-height:1}
+.user-chip .dot{flex:0 0 8px;width:8px;height:8px}
+.bottom-nav{display:flex;align-items:flex-end;justify-content:space-between;gap:2px;padding:10px 8px 22px}
+.nav-item{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;padding:6px 2px 0}
+.nav-item svg{display:block;width:22px;height:22px}
+.nav-item span{display:block;line-height:1;text-align:center}
+.nav-item.fab-nav{margin-top:-30px;justify-content:flex-end}
+.nav-item.fab-nav .fab-circle{display:flex;align-items:center;justify-content:center;width:48px;height:48px}
+.nav-item.fab-nav .fab-circle svg{display:block;width:24px;height:24px}
+.kpi-card{display:flex;flex-direction:column;align-items:flex-start}
+.kpi-card .icon{display:flex;align-items:center;justify-content:center;width:32px;height:32px}
+.kpi-card .icon svg{display:block}
+.kpi-card .value{line-height:1.1}
+.kpi-card .label{line-height:1.2}
+.movement-item{align-items:center}
+.movement-item .movement-badge{flex:0 0 auto;align-self:center}
+.movement-item .movement-amount{flex:0 0 auto;align-self:center}
+.list-checkbox{align-self:center;flex:0 0 22px}
+.article-header{align-items:center}
+.article-icon{display:flex;align-items:center;justify-content:center;flex:0 0 48px;width:48px;height:48px}
+.article-icon svg{display:block;width:24px;height:24px}
+.article-delete{display:inline-flex;align-items:center;justify-content:center;flex:0 0 32px;width:32px;height:32px}
+.article-delete svg{display:block;width:18px;height:18px}
+.person-header{align-items:center}
+.person-avatar{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px}
+.person-badge{align-self:center}
+.search-bar{align-items:center}
+.search-bar svg{display:block;flex:0 0 18px;width:18px;height:18px}
+.tabs{align-items:stretch}
+.tab{display:flex;align-items:center;justify-content:center}
+.sync-bar{align-items:center}
+.sync-bar .dot{flex:0 0 8px;width:8px;height:8px}
+.ai-input-area{align-items:stretch}
+.ai-send{display:flex;align-items:center;justify-content:center}
+.btn-primary,.btn-secondary{display:flex;align-items:center;justify-content:center;text-align:center}
+.detail-row{align-items:center}
+.article-stats{align-items:flex-start}
+.stat{display:flex;flex-direction:column;align-items:flex-start}
 </style>
 </head>
 <body>
@@ -437,6 +428,8 @@ const disponibles=a=>(a.total||0)-(a.asignados||0);
 const asignados=a=>a.asignados||0;
 const persona=id=>{const p=db.people.find(x=>x.id===id);return p?p.nombre:'—'};
 const articulo=id=>db.articles.find(x=>x.id===id);
+const norm=s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+const sing=s=>{s=norm(s);return s.endsWith('s')?s.slice(0,-1):s};
 const canEdit=()=>currentRole==='admin'||currentRole==='almacenista';
 function showToast(m){const t=document.getElementById('toast');document.getElementById('toast-msg').textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200)}
 function openM(id){document.getElementById(id).classList.add('open')}
@@ -521,7 +514,7 @@ async function eliminarMovimientos(ids){for(const id of[...ids]){const m=db.move
 /* ═══════ ROLES (admin) ═══════ */
 async function cambiarRol(u,r){await updateDoc(doc(fdb,'users',u),{role:r});showToast('Rol actualizado a: '+r);}
 async function aprobarUsuario(u){await updateDoc(doc(fdb,'users',u),{role:'almacenista'});showToast('✅ Usuario aprobado como almacenista');}
-async function rechazarUsuario(u){await updateDoc(doc(fdb,'users',u),{role:'rechazado'});showToast(' Usuario rechazado');}
+async function rechazarUsuario(u){await updateDoc(doc(fdb,'users',u),{role:'rechazado'});showToast('Usuario rechazado');}
 /* ═══════ RENDER Y UI ═══════ */
 function fillSelect(id,fn,filtro,ph){const el=document.getElementById(id);const list=filtro?db.articles.filter(filtro):db.articles;el.innerHTML=(ph?'<option value="">'+ph+'</option>':'<option value="">Selecciona...</option>')+list.map(a=>'<option value="'+a.id+'">'+fn(a)+'</option>').join('');}
 function showDvInfo(){const id=document.getElementById('dv-asig').value;const b=document.getElementById('dv-info');if(!id){b.innerHTML='';return}const m=db.movements.find(x=>x.id===id);if(!m){b.innerHTML='';return}const a=articulo(m.artId);b.innerHTML='<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:14px;font-size:13px;color:var(--text-secondary)">👤 '+esc(persona(m.personaId))+' · 📍 '+esc(m.ubic)+'<br>Pendiente: <b style="color:var(--accent)">'+(m.cant-(m.devuelto||0))+'</b></div>';document.getElementById('dv-cant').max=m.cant-(m.devuelto||0);}
@@ -573,7 +566,7 @@ function accion(t){closeM('ov-acciones');
  else if(t==='devolver'){const as=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo'&&(m.cant-(m.devuelto||0))>0);document.getElementById('dv-asig').innerHTML='<option value="">Selecciona...</option>'+as.map(m=>'<option value="'+m.id+'">'+esc(articulo(m.artId)?articulo(m.artId).nombre:'?')+' → '+esc(persona(m.personaId))+' ('+(m.cant-(m.devuelto||0))+')</option>').join('');document.getElementById('dv-fecha').value=today();document.getElementById('dv-cant').value=1;openM('ov-devolver');}
  else if(t==='consumo'){fillSelect('co-art',a=>esc(a.nombre)+' — disp: '+disponibles(a));document.getElementById('co-persona').innerHTML='<option value="">— Sin responsable —</option>'+db.people.map(p=>'<option value="'+p.id+'">'+esc(p.nombre)+'</option>').join('');const u=document.getElementById('co-ubic');u.innerHTML='<option value="">Selecciona...</option>'+UBIC.map(x=>'<option>'+x+'</option>').join('');document.getElementById('co-fecha').value=today();document.getElementById('co-cant').value=1;openM('ov-consumo');}}
 
-/* ═══════ IA (QWEN) REINTEGRADA ═══════ */
+/* ═══════ IA (QWEN) ═══════ */
 const QWEN_KEY='sk-ws-H.DMLDYXH.B7DP.MEQCIEadN2MZxHF09JwM3mQ8E1ucdQaDgJEoOZK2K6LV6kydAiBd_vLuxESH5Uqlo3Sz1auPjz6TvGDv6Dh8EgTYpTxwMg';
 function openAI(){if(!canEdit())return showToast('⚠️ Tu rol es solo consulta');openM('ov-ai');document.getElementById('ai-input').focus();}
 async function llamarQwen(prompt){
@@ -588,6 +581,8 @@ async function llamarQwen(prompt){
   return{ok:false,error:lastErr};
 }
 function estadoResumen(){return{articulos:db.articles.map(a=>({nombre:a.nombre,tipo:a.tipo,unidad:a.unidad,total:a.total,disponibles:disponibles(a),asignados:asignados(a)})),personas:db.people.map(p=>({nombre:p.nombre,tiene:db.movements.filter(m=>m.personaId===p.id&&m.tipo==='asignacion'&&m.estado==='activo'&&(m.cant-(m.devuelto||0))>0).reduce((acc,m)=>{const a=articulo(m.artId);const e=acc.find(x=>x.articulo===(a?a.nombre:'?'));if(e)e.cantidad+=m.cant-(m.devuelto||0);else acc.push({articulo:a?a.nombre:'?',cantidad:m.cant-(m.devuelto||0),ubicacion:m.ubic});return acc},[])}))};}
+function buscarPersonaLocal(q){if(!q)return null;const n=norm(q);return db.people.find(p=>norm(p.nombre)===n)||db.people.find(p=>{const np=norm(p.nombre);return np.includes(n)||n.includes(np)})||null}
+function buscarArticuloLocal(q){if(!q)return null;const n=norm(q),sn=sing(n);return db.articles.find(a=>norm(a.nombre)===n)||db.articles.find(a=>{const na=norm(a.nombre),sa=sing(na);return na===sn||sa===sn||na.includes(n)||n.includes(na)||sa.includes(sn)||sn.includes(sa)})||null}
 async function ejecutarOperaciones(ops){
   const log=[];
   for(const op of(ops||[])){try{
@@ -603,8 +598,6 @@ async function ejecutarOperaciones(ops){
   }catch(e){log.push('⚠️ '+(typeof e==='string'?e:(e.message||'Error')));}}
   return log;
 }
-function buscarPersonaLocal(q){if(!q)return null;const n=norm(q);return db.people.find(p=>norm(p.nombre)===n)||db.people.find(p=>{const np=norm(p.nombre);return np.includes(n)||n.includes(np)})||null}
-function buscarArticuloLocal(q){if(!q)return null;const n=norm(q),sn=sing(n);return db.articles.find(a=>norm(a.nombre)===n)||db.articles.find(a=>{const na=norm(a.nombre),sa=sing(na);return na===sn||sa===sn||na.includes(n)||n.includes(na)||sa.includes(sn)||sn.includes(sa)})||null}
 async function sendAI(){
   const input=document.getElementById('ai-input');const msg=input.value.trim();if(!msg)return;
   const chat=document.getElementById('ai-chat');chat.innerHTML+='<div class="ai-msg user">'+esc(msg)+'</div>';input.value='';chat.scrollTop=chat.scrollHeight;
