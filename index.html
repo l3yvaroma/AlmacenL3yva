@@ -116,6 +116,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .form-input:focus,.form-select:focus{border-color:var(--accent)}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .btn-primary{width:100%;padding:16px;background:var(--accent);color:#000;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;cursor:pointer;margin-top:8px}
+.btn-primary:disabled{opacity:.4}
 .btn-secondary{width:100%;padding:16px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;margin-top:8px}
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 20px;z-index:400;transition:transform .3s ease;font-size:14px;max-width:90%}
 .toast.show{transform:translateX(-50%) translateY(0)}
@@ -402,22 +403,52 @@ function openM(id){document.getElementById(id).classList.add('open')}
 function closeM(id){document.getElementById(id).classList.remove('open')}
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
 
+/* ═══════ LOGIN (CORREGIDO) ═══════ */
 function loginTab(m){loginMode=m;document.getElementById('lt-entrar').classList.toggle('active',m==='entrar');document.getElementById('lt-registrar').classList.toggle('active',m==='registrar');document.getElementById('ff-nombre').style.display=m==='registrar'?'block':'none';document.getElementById('li-btn').textContent=m==='registrar'?'Crear cuenta':'Entrar';}
 async function loginSubmit(){
-  const email=document.getElementById('li-email').value.trim(),pass=document.getElementById('li-pass').value,nombre=document.getElementById('li-nombre').value.trim();
+  const email=document.getElementById('li-email').value.trim();
+  const pass=document.getElementById('li-pass').value;
+  const nombre=document.getElementById('li-nombre').value.trim();
+  if(!email||!pass)return showToast('⚠️ Completa correo y contraseña');
+  if(pass.length<6)return showToast('⚠️ La contraseña debe tener mínimo 6 caracteres');
+  const btn=document.getElementById('li-btn');
+  btn.disabled=true;btn.textContent='Procesando...';
   try{
     if(loginMode==='registrar'){
+      console.log('Registrando:',email);
       const cred=await createUserWithEmailAndPassword(auth,email,pass);
+      console.log('Usuario creado:',cred.user.uid);
       const existing=await getDocs(collection(fdb,'users'));
       const role=existing.empty?'admin':'consulta';
       await setDoc(doc(fdb,'users',cred.user.uid),{email,nombre:nombre||email.split('@')[0],role,creado:today()});
-      showToast(role==='admin'?'🎉 Cuenta creada: eres ADMINISTRADOR':'Cuenta creada (rol: consulta)');
+      showToast(role==='admin'?'🎉 Cuenta creada: eres ADMINISTRADOR':'✅ Cuenta creada (rol: consulta)');
     }else{
+      console.log('Entrando:',email);
       await signInWithEmailAndPassword(auth,email,pass);
     }
-  }catch(e){showToast('⚠️ '+traducirError(e.code));}
+  }catch(e){
+    console.error('Error:',e);
+    showToast('⚠️ '+traducirError(e.code));
+  }finally{
+    btn.disabled=false;
+    btn.textContent=loginMode==='registrar'?'Crear cuenta':'Entrar';
+  }
 }
-function traducirError(c){return {'auth/invalid-credential':'Credenciales incorrectas','auth/wrong-password':'Contraseña incorrecta','auth/user-not-found':'Usuario no existe','auth/email-already-in-use':'El correo ya está registrado','auth/weak-password':'Contraseña muy débil (mín. 6)','auth/invalid-email':'Correo inválido','auth/too-many-requests':'Muchos intentos, espera un momento'}[c]||('Error: '+c)}
+function traducirError(c){
+  const errors={
+    'auth/invalid-credential':'Credenciales incorrectas',
+    'auth/wrong-password':'Contraseña incorrecta',
+    'auth/user-not-found':'Usuario no existe',
+    'auth/email-already-in-use':'El correo ya está registrado',
+    'auth/weak-password':'Contraseña muy débil (mín. 6)',
+    'auth/invalid-email':'Correo inválido',
+    'auth/too-many-requests':'Muchos intentos, espera un momento',
+    'auth/configuration-not-found':'Auth no configurado (habilita Email/Password)',
+    'auth/operation-not-allowed':'Operación no permitida (habilita Email/Password)',
+    'auth/network-request-failed':'Error de red'
+  };
+  return errors[c]||('Error: '+(c||'desconocido'));
+}
 function loginSalir(){signOut(auth)}
 onAuthStateChanged(auth,async u=>{
   currentUser=u;
@@ -433,6 +464,7 @@ onAuthStateChanged(auth,async u=>{
   }
 });
 
+/* ═══════ SINCRONIZACIÓN ═══════ */
 function startSync(){
   unsubs.push(onSnapshot(collection(fdb,'articulos'),s=>{db.articles=s.docs.map(d=>({id:d.id,...d.data()}));renderAll();},e=>setSync(false)));
   unsubs.push(onSnapshot(collection(fdb,'personas'),s=>{db.people=s.docs.map(d=>({id:d.id,...d.data()}));renderAll();}));
@@ -442,13 +474,14 @@ function startSync(){
 }
 function setSync(ok){document.getElementById('sync-status').textContent=ok?'☁️ Conectado a la nube · sincronización en tiempo real':'📴 Sin conexión · mostrando caché local';}
 
+/* ═══════ TRANSACCIÓN DE STOCK ═══════ */
 async function ajustarStock(artId,tipo,cant){
   return runTransaction(fdb,async tx=>{
     const ref=doc(fdb,'articulos',artId);
     const snap=await tx.get(ref);
     if(!snap.exists())throw 'El artículo no existe en la nube';
     const a=snap.data();const total=a.total||0,asig=a.asignados||0,disp=total-asig;
-    if(tipo==='asignacion'){if(cant>disp)throw 'Stock insuficiente: solo hay '+disp+' disponibles (validado en servidor)';tx.update(ref,{asignados:asig+cant});}
+    if(tipo==='asignacion'){if(cant>disp)throw 'Stock insuficiente: solo hay '+disp+' disponibles';tx.update(ref,{asignados:asig+cant});}
     else if(tipo==='devolucion'){tx.update(ref,{asignados:Math.max(0,asig-cant)});}
     else if(tipo==='entrada'){tx.update(ref,{total:total+cant});}
     else if(tipo==='consumo'){if(cant>disp)throw 'Stock insuficiente: solo hay '+disp+' disponibles';tx.update(ref,{total:Math.max(0,total-cant)});}
@@ -456,6 +489,7 @@ async function ajustarStock(artId,tipo,cant){
 }
 async function addMov(m){m.id=uid();m.fecha=m.fecha||today();m.hora=m.hora||ahora();m.user=m.user||((currentUser&&currentUser.email)||'—');await addDoc(collection(fdb,'movimientos'),m);return m.id;}
 
+/* ═══════ OPERACIONES ═══════ */
 async function saveArticulo(){
   if(!canEdit())return showToast('⚠️ Sin permisos de edición');
   const n=document.getElementById('art-nombre').value.trim();const total=parseInt(document.getElementById('art-total').value)||0;
@@ -545,32 +579,4 @@ async function eliminarMovimientos(ids){
 }
 async function cambiarRol(uidv,rol){await updateDoc(doc(fdb,'users',uidv),{role:rol});showToast('Rol actualizado');}
 
-function openAI(){openM('ov-ai');document.getElementById('ai-input').focus()}
-async function llamarQwen(prompt){
-  const intentos=[
-    {tipo:'openai',url:'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions',model:'qwen-plus'},
-    {tipo:'openai',url:'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions',model:'qwen-turbo'},
-    {tipo:'anthropic',url:'https://ws-codv7e1dfpvk7kl6.ap-southeast-1.maas.aliyuncs.com/apps/anthropic/v1/messages',model:'qwen-plus'}
-  ];
-  let lastErr='';
-  for(const it of intentos){
-    try{
-      let headers,body,parse;
-      if(it.tipo==='openai'){headers={'Content-Type':'application/json','Authorization':'Bearer '+QWEN_KEY};body=JSON.stringify({model:it.model,messages:[{role:'user',content:prompt}],temperature:0.2});parse=d=>d.choices&&d.choices[0]?d.choices[0].message.content:'';}
-      else{headers={'Content-Type':'application/json','x-api-key':QWEN_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};body=JSON.stringify({model:it.model,max_tokens:1024,messages:[{role:'user',content:prompt}]});parse=d=>d.content&&d.content[0]?d.content[0].text:'';}
-      const r=await fetch(it.url,{method:'POST',headers,body});
-      if(r.ok){const d=await r.json();const t=parse(d);if(t)return{ok:true,text:t};lastErr='Respuesta vacía';}
-      else lastErr='HTTP '+r.status;
-    }catch(e){lastErr='Red/CORS';}
-  }
-  return{ok:false,error:lastErr};
-}
-function estadoResumen(){return{articulos:db.articles.map(a=>({nombre:a.nombre,tipo:a.tipo,unidad:a.unidad,total:a.total,disponibles:disponibles(a),asignados:asignados(a)})),personas:db.people.map(p=>({nombre:p.nombre,tiene:db.movements.filter(m=>m.personaId===p.id&&m.tipo==='asignacion'&&m.estado==='activo'&&(m.cant-(m.devuelto||0))>0).reduce((acc,m)=>{const a=articulo(m.artId);const e=acc.find(x=>x.articulo===(a?a.nombre:'?'));if(e)e.cantidad+=m.cant-(m.devuelto||0);else acc.push({articulo:a?a.nombre:'?',cantidad:m.cant-(m.devuelto||0),ubicacion:m.ubic});return acc},[])}))};}
-async function ejecutarOperaciones(ops){
-  const log=[];
-  for(const op of (ops||[])){
-    try{
-      if(op.op==='crear_persona'){const ex=buscarPersona(op.nombre);if(ex)log.push('👤 '+ex.nombre+' ya existía.');else{await addDoc(collection(fdb,'personas'),{nombre:String(op.nombre).trim(),cargo:op.cargo||''});log.push('👤 Persona creada: '+op.nombre);}}
-      else if(op.op==='crear_articulo'){const ex=buscarArticulo(op.nombre);if(ex)log.push('📦 '+ex.nombre+' ya existía.');else{await addDoc(collection(fdb,'articulos'),{nombre:String(op.nombre).trim(),codigo:op.codigo||'',tipo:op.tipo||'herramienta',unidad:op.unidad||'und',total:Math.max(0,parseInt(op.total)||0),asignados:0,min:0});log.push('📦 Artículo creado: '+op.nombre);}}
-      else if(op.op==='set_total'){const a=buscarArticulo(op.articulo);if(!a)throw 'Artículo no encontrado';await runTransaction(fdb,async tx=>{const r=doc(fdb,'articulos',a.id);const s=await tx.get(r);const asig=s.data().asignados||0;tx.update(r,{total:Math.max(parseInt(op.total)||0,asig)});});log.push('🔢 '+a.nombre+' → total ajustado');}
-      else if(op.op==='entrada'){const a=buscarArticulo(op.articulo);if(!a)throw 'Artículo no encontrado';const c=Math.max(1,parseInt(op.cantidad)||1);await ajustarStock(a.id,'entrada',c);await addMov({artId:a.id,tipo:'entrada',cant:c,personaId:'',ubic:op.ubicacion||'Almacén',devuelto:0,estado:'ok',user:'IA'});log.push('
+/* ═══════ MOTOR IA ═
