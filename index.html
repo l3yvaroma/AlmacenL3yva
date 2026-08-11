@@ -2,6 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#000000">
@@ -154,7 +157,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .solo-lectura .fab-nav,.solo-lectura .article-delete,.solo-lectura #btn-sel{display:none!important}
 .text-accent{color:var(--accent)}
 .mt-4{margin-top:16px}.mb-4{margin-bottom:16px}
-/* ═══════ PARCHE: ALINEADO Y SIMETRÍA ═══════ */
 .header{display:flex;align-items:center}
 .header h1{line-height:1}
 .header-actions{display:flex;align-items:center;gap:8px}
@@ -198,6 +200,9 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .detail-row{align-items:center}
 .article-stats{align-items:flex-start}
 .stat{display:flex;flex-direction:column;align-items:flex-start}
+#btn-users{position:relative}
+.notif-badge{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:9px;background:var(--danger);color:#fff;font-size:10px;font-weight:800;display:none;align-items:center;justify-content:center;padding:0 4px}
+#admin-pending-banner{cursor:pointer}
 </style>
 </head>
 <body>
@@ -223,7 +228,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     <h1>L3yvaINV</h1>
     <div class="header-actions">
       <button class="icon-btn" onclick="exportExcel()" title="Excel"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
-      <button class="icon-btn" id="btn-users" onclick="openM('ov-usuarios')" title="Usuarios" style="display:none"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>
+      <button class="icon-btn" id="btn-users" onclick="openM('ov-usuarios')" title="Usuarios" style="display:none"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span id="users-badge" class="notif-badge">0</span></button>
       <button class="icon-btn" onclick="openAI()" title="IA"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></button>
       <button class="icon-btn" onclick="loginSalir()" title="Cerrar sesión"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
       <div class="user-chip"><span class="dot"></span><span id="user-name">—</span></div>
@@ -233,6 +238,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
   <div class="content">
     <div class="screen active" id="scr-inicio">
       <div class="sync-bar" id="pending-banner" style="display:none"><span>⏳</span><span id="pending-text">Tu acceso está pendiente de aprobación.</span></div>
+      <div class="sync-bar warn" id="admin-pending-banner" style="display:none" onclick="openM('ov-usuarios')"><span>🔔</span><span id="admin-pending-text"></span></div>
       <div class="sync-bar"><span class="dot"></span><span id="sync-status">Conectado a la nube · sincronización en tiempo real</span></div>
       <div class="section-title">Resumen general</div>
       <div class="kpi-grid" id="kpis"></div>
@@ -531,7 +537,7 @@ function renderAsignados(){const q=(document.getElementById('q-asig').value||'')
 document.getElementById('lista-asignados').innerHTML=list.length?list.map(m=>{const a=articulo(m.artId);const r=m.cant-(m.devuelto||0);return '<div class="movement-item" onclick="verDetalleMovimiento(\''+m.id+'\')"><div class="movement-info"><div class="name">'+esc(a?a.nombre:'?')+'</div><div class="meta">👤 '+esc(persona(m.personaId))+' · 📍 '+esc(m.ubic)+' · '+fmt(m.fecha)+'</div></div><div class="movement-amount">'+r+'</div>'+(asigTab==='activos'?'<button class="btn-mini btn-ghost" onclick="event.stopPropagation();devolverDesde(\''+m.id+'\')">Devolver</button>':'')+'</div>';}).join(''):'<div class="empty-state"><h3>'+(asigTab==='activos'?'Nada en circulación':'Sin devoluciones')+'</h3></div>';}
 function devolverDesde(id){const m=db.movements.find(x=>x.id===id);document.getElementById('dv-asig').innerHTML='<option value="'+id+'" selected>'+esc(articulo(m.artId)?articulo(m.artId).nombre:'?')+' → '+esc(persona(m.personaId))+'</option>';document.getElementById('dv-fecha').value=today();document.getElementById('dv-cant').value=1;showDvInfo();openM('ov-devolver');}
 function renderPersonas(){const q=(document.getElementById('q-per').value||'').toLowerCase();const list=db.people.filter(p=>p.nombre.toLowerCase().includes(q));
-document.getElementById('lista-personas').innerHTML=(canEdit()?'<button class="btn-primary mb-4" onclick="openM(\'ov-persona\')">＋ Nueva persona</button>':'')+(list.length?list.map(p=>{const tiene=db.movements.filter(m=>m.personaId===p.id&&m.tipo==='asignacion'&&m.estado==='activo'&&(m.cant-(m.devuelto||0))>0);const agg={};tiene.forEach(m=>{if(!agg[m.artId])agg[m.artId]={c:0,u:m.ubic};agg[m.artId].c+=m.cant-(m.devuelto||0);});const rows=Object.entries(agg).map(([id,v])=>{const a=articulo(id);return '<div class="person-detail-row"><span class="label">'+esc(a?a.nombre:'?')+' · '+esc(v.u)+'</span><span class="value">'+v.c+'</span></div>'}).join('');return '<div class="person-card"><div class="person-header"><div class="person-avatar">'+p.nombre.charAt(0)+'</div><div class="person-info"><div class="person-name">'+esc(p.nombre)+'</div><div class="person-role">'+esc(p.cargo||'Sin cargo')+'</div></div><span class="person-badge '+(tiene.length?'':'ok')+'">'+tiene.length+' por devolver</span>'+(currentRole==='admin'?'<button class="article-delete" onclick="confirmarEliminarPersona(\''+p.id+'\')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>':'')+'</div>'+(tiene.length?'<div class="person-details">'+rows+'</div>':'')+'</div>';}).join(''):'<div class="empty-state"><h3>Sin personas</h3></div>');}
+document.getElementById('lista-personas').innerHTML=(canEdit()?'<button class="btn-primary mb-4" onclick="openM(\'ov-persona\')">＋ Nueva persona</button>':'')+(list.length?list.map(p=>{const tiene=db.movements.filter(m=>m.personaId===p.id&&m.tipo==='asignacion'&&m.estado==='activo'&&(m.cant-(m.devuelto||0))>0);const agg={};tiene.forEach(m=>{if(!agg[m.artId])agg[m.artId]={c:0,u:m.ubic};agg[m.artId].c+=m.cant-(m.devuelto||0);});const rows=Object.entries(agg).map(([id,v])=>{const a=articulo(id);return '<div class="person-detail-row"><span class="label">'+esc(a?a.nombre:'?')+' · '+esc(v.u)+'</span><span class="value">'+v.c+'</span></div>'}).join('');return '<div class="person-card"><div class="person-header"><div class="person-avatar">'+p.nombre.charAt(0)+'</div><div class="person-info"><div class="person-name">'+esc(p.nombre)+'</div><div class="person-role">'+esc(p.cargo||'Sin cargo')+'</div></div><span class="person-badge '+(tiene.length?'':'ok')+'">'+tiene.length+' por devolver</span>'+(currentRole==='admin'?'<button class="article-delete" onclick="confirmarEliminarPersona(\''+p.id+'\')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>':'')+'</div>'+(tiene.length?'<div class="person-details">'+rows+'</div>':'')+'</div>';}).join(''):'<div class="empty-state"><h3>Sin personas</h3></div>';}
 function renderMovChips(){const M={todos:'Todos',entrada:'Entradas',asignacion:'Asignaciones',devolucion:'Devoluciones',consumo:'Consumos'};document.getElementById('mov-chips').innerHTML=Object.entries(M).map(([v,l])=>'<div class="chip '+(filtroMov===v?'active':'')+'" onclick="filtroMov=\''+v+'\';renderHistorial()">'+l+'</div>').join('');}
 function renderHistorial(){renderMovChips();const list=[...db.movements].filter(m=>filtroMov==='todos'||m.tipo===filtroMov).sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));window._visibles=list.map(m=>m.id);
 document.getElementById('lista-historial').innerHTML=list.length?list.map(m=>movRow(m,modoSeleccion)).join(''):'<div class="empty-state"><h3>Sin movimientos</h3></div>';actualizarSelBar();}
@@ -620,9 +626,88 @@ function xR(c){return '<Row>'+c.join('')+'</Row>'}
 function xW(n,r){return '<Worksheet ss:Name="'+xesc(n)+'"><Table>'+r+'</Table></Worksheet>'}
 function exportExcel(){const hoy=today();let r=[xR(['Artículo','Código','Tipo','Unidad','Total','En almacén','Asignados','Stock mín.'].map(h=>cS(h,'sH')))];db.articles.forEach(a=>{r.push(xR([cS(a.nombre),cS(a.codigo||''),cS(TIPOS[a.tipo].l),cS(a.unidad),cN(a.total),cN(disponibles(a)),cN(asignados(a)),cN(a.min)]))});let k=[xR(['Fecha','Hora','Concepto','Responsable','Ubicación','Cant','Registró','Notas'].map(h=>cS(h,'sH')))];[...db.movements].sort((a,b)=>String(a.fecha).localeCompare(String(b.fecha))).forEach(m=>{k.push(xR([cS(fmt(m.fecha)),cS(m.hora||''),cS(m.tipo),cS(persona(m.personaId)),cS(m.ubic),cN(m.cant),cS(m.user||''),cS(m.notas||'')]))});const xml='<?xml version="1.0" encoding="UTF-8"?>\n<?mso-application progid="Excel.Sheet"?>\n<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="sH"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#1A5F4A" ss:Pattern="Solid"/></Style></Styles>'+xW('Resumen',r.join(''))+xW('Kardex',k.join(''))+'</Workbook>';const b=new Blob([xml],{type:'application/vnd.ms-excel'});const u=URL.createObjectURL(b);const l=document.createElement('a');l.href=u;l.download='Kardex_L3yvaINV_'+hoy+'.xls';document.body.appendChild(l);l.click();setTimeout(()=>{document.body.removeChild(l);URL.revokeObjectURL(u)},400);showToast('Excel descargado');}
 
+/* ═══════ NOTIFICACIONES ═══════ */
+let _pendPrev=null,_watchStarted=false;
+function watchPending(){
+  if(_watchStarted)return;_watchStarted=true;
+  onSnapshot(collection(fdb,'users'),s=>{
+    const all=s.docs.map(d=>({id:d.id,...d.data()}));
+    const pend=all.filter(u=>u.role==='pendiente');
+    const badge=document.getElementById('users-badge');
+    if(badge){badge.textContent=pend.length;badge.style.display=pend.length?'flex':'none';}
+    const ban=document.getElementById('admin-pending-banner');
+    if(ban){
+      if(currentRole==='admin'&&pend.length){ban.style.display='flex';document.getElementById('admin-pending-text').textContent='🔔 '+pend.length+' solicitud'+(pend.length!==1?'s':'')+' de acceso pendiente'+(pend.length!==1?'s':'')+'. Toca para aprobar.';}
+      else ban.style.display='none';
+    }
+    if(currentRole==='admin'&&_pendPrev!==null&&pend.length>_pendPrev){showToast('🔔 Nueva solicitud de acceso pendiente');}
+    _pendPrev=pend.length;
+  });
+}
+onAuthStateChanged(auth,u=>{if(u)watchPending();});
+
 function renderAll(){renderInicio();renderArticulos();renderAsignados();renderPersonas();renderHistorial();}
 
 Object.assign(window,{go,openFab,accion,openAI,sendAI,exportExcel,openM,closeM,setAsigTab,devolverDesde,entrarSeleccion,salirSeleccion,toggleSel,toggleSelTodos,confirmarEliminarMov,confirmarEliminarArticulo,confirmarEliminarPersona,verDetalle,verDetalleMovimiento,saveArticulo,saveEntrada,saveAsignacion,saveDevolucion,saveConsumo,savePersona,showDvInfo,renderArticulos,renderAsignados,renderPersonas,renderHistorial,loginTab,loginSubmit,loginSalir,cambiarRol,aprobarUsuario,rechazarUsuario});
+ /* ═══════════════ PARCHE FINAL: EDICIÓN + FILTROS + MILES + DETALLE PERSONA ═══════════════ */
+const PENCIL='<svg viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>';
+document.head.insertAdjacentHTML('beforeend','<style>.edit-btn{width:32px;height:32px;border-radius:8px;background:transparent;border:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;opacity:.6}.edit-btn svg{width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:2}.person-card{cursor:pointer}</style>');
+
+(function(){
+  const pm=document.querySelector('#ov-persona .modal-sheet');
+  if(pm&&!document.getElementById('per-id'))pm.insertAdjacentHTML('afterbegin','<input type="hidden" id="per-id">');
+  document.body.insertAdjacentHTML('beforeend',
+  '<div class="modal-overlay" id="ov-edit-asig"><div class="modal-sheet"><div class="modal-grab"></div><div class="modal-title">✏️ Editar asignación</div><div class="modal-subtitle">Actualiza responsable, ubicación u observación.</div><input type="hidden" id="ea-id"><div class="form-field"><label class="form-label">Responsable</label><select class="form-select" id="ea-persona"></select></div><div class="form-field"><label class="form-label">Ubicación / destino</label><select class="form-select" id="ea-ubic"></select></div><div class="form-field"><label class="form-label">Observación</label><input class="form-input" id="ea-notas" placeholder="Observaciones..."></div><button class="btn-primary" onclick="saveEditAsignacion()">Guardar cambios</button><button class="btn-secondary" onclick="closeM(\'ov-edit-asig\')">Cancelar</button></div></div>'+
+  '<div class="modal-overlay" id="ov-detalle-persona"><div class="modal-sheet" id="detalle-persona-body"></div></div>');
+  document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+})();
+
+/* ── Filtros (chips) ── */
+function setFiltroTipo(v){filtroTipo=v;renderArticulos();}
+function setFiltroMov(v){filtroMov=v;renderHistorial();}
+function renderTipoChips(){const c=[{v:'todos',l:'Todos'}].concat(Object.entries(TIPOS).map(([v,t])=>({v,l:t.l})));document.getElementById('tipo-chips').innerHTML=c.map(x=>'<div class="chip '+(filtroTipo===x.v?'active':'')+'" onclick="setFiltroTipo(\''+x.v+'\')">'+x.l+'</div>').join('');}
+function renderMovChips(){const M={todos:'Todos',entrada:'Entradas',asignacion:'Asignaciones',devolucion:'Devoluciones',consumo:'Consumos'};document.getElementById('mov-chips').innerHTML=Object.entries(M).map(([v,l])=>'<div class="chip '+(filtroMov===v?'active':'')+'" onclick="setFiltroMov(\''+v+'\')">'+l+'</div>').join('');}
+
+/* ── Números con miles ── */
+function mil(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function formatNumbers(){document.querySelectorAll('.stat-value,.kpi-card .value,.movement-amount,.person-detail-row .value,.detail-value').forEach(el=>{const t=el.textContent.trim();const m=t.match(/^([+-]?)(\d+)([\s\S]*)$/);if(m)el.textContent=m[1]+mil(m[2])+m[3];});}
+function renderAll(){renderInicio();renderArticulos();renderAsignados();renderPersonas();renderHistorial();formatNumbers();}
+
+/* ── Edición de persona ── */
+function nuevaPersona(){document.getElementById('per-id').value='';document.getElementById('per-nombre').value='';document.getElementById('per-cargo').value='';document.querySelector('#ov-persona .modal-title').textContent='Nueva persona';openM('ov-persona');}
+function editarPersona(id){const p=db.people.find(x=>x.id===id);if(!p)return;document.getElementById('per-id').value=id;document.getElementById('per-nombre').value=p.nombre;document.getElementById('per-cargo').value=p.cargo||'';document.querySelector('#ov-persona .modal-title').textContent='✏️ Editar persona';openM('ov-persona');}
+async function savePersona(){if(!canEdit())return showToast('⚠️ Sin permisos');const n=document.getElementById('per-nombre').value.trim();if(!n)return showToast('Nombre obligatorio');const id=document.getElementById('per-id').value;const data={nombre:n,cargo:document.getElementById('per-cargo').value.trim()};if(id){await updateDoc(doc(fdb,'personas',id),data);showToast('Persona actualizada');}else{await addDoc(collection(fdb,'personas'),data);showToast('Persona guardada');}document.getElementById('per-id').value='';closeM('ov-persona');}
+/* ── Edición de artículo ── */
+function editarArticulo(id){const a=db.articles.find(x=>x.id===id);if(!a)return;document.getElementById('art-id').value=id;document.getElementById('art-nombre').value=a.nombre;document.getElementById('art-codigo').value=a.codigo||'';document.getElementById('art-unidad').value=a.unidad||'';document.getElementById('art-tipo').value=a.tipo;document.getElementById('art-total').value=a.total||0;document.getElementById('art-min').value=a.min||0;openM('ov-articulo');}
+/* ── Edición de asignación ── */
+function editarAsignacion(id){const m=db.movements.find(x=>x.id===id);if(!m)return;document.getElementById('ea-id').value=id;document.getElementById('ea-persona').innerHTML=db.people.map(p=>'<option value="'+p.id+'" '+(p.id===m.personaId?'selected':'')+'>'+esc(p.nombre)+'</option>').join('');document.getElementById('ea-ubic').innerHTML=UBIC.map(u=>'<option '+(u===m.ubic?'selected':'')+'>'+u+'</option>').join('');document.getElementById('ea-notas').value=m.notas||'';openM('ov-edit-asig');}
+async function saveEditAsignacion(){if(!canEdit())return showToast('⚠️ Sin permisos');const id=document.getElementById('ea-id').value;if(!id)return;await updateDoc(doc(fdb,'movimientos',id),{personaId:document.getElementById('ea-persona').value,ubic:document.getElementById('ea-ubic').value,notas:document.getElementById('ea-notas').value.trim()});closeM('ov-edit-asig');showToast('Asignación actualizada');}
+/* ── Detalle de persona ── */
+function verDetallePersona(id){const p=db.people.find(x=>x.id===id);if(!p)return;
+ const acts=db.movements.filter(m=>m.personaId===id&&m.tipo==='asignacion'&&m.estado==='activo'&&(m.cant-(m.devuelto||0))>0);
+ const cons=db.movements.filter(m=>m.personaId===id&&m.tipo==='consumo').sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));
+ const dev=db.movements.filter(m=>m.personaId===id&&m.tipo==='devolucion').sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));
+ let html='<div class="modal-grab"></div><div class="modal-title">👤 '+esc(p.nombre)+'</div><div class="modal-subtitle">'+esc(p.cargo||'Sin cargo')+'</div>';
+ html+='<div class="section-title">📤 Asignado actualmente</div>';
+ html+=acts.length?acts.map(m=>{const a=articulo(m.artId);return '<div class="movement-item" onclick="closeM(\'ov-detalle-persona\');verDetalleMovimiento(\''+m.id+'\')"><div class="movement-info"><div class="name">'+esc(a?a.nombre:'?')+'</div><div class="meta">📍 '+esc(m.ubic)+' · desde '+fmt(m.fecha)+'</div></div><div class="movement-amount">'+(m.cant-(m.devuelto||0))+'</div></div>'}).join(''):'<p style="color:var(--text-muted);font-size:13px">Nada asignado.</p>';
+ html+='<div class="section-title mt-4">🧻 Consumos</div>';
+ html+=cons.length?cons.slice(0,10).map(m=>{const a=articulo(m.artId);return '<div class="movement-item"><div class="movement-info"><div class="name">'+esc(a?a.nombre:'?')+'</div><div class="meta">'+fmt(m.fecha)+' · 📍 '+esc(m.ubic)+'</div></div><div class="movement-amount amount-negative">-'+m.cant+'</div></div>'}).join(''):'<p style="color:var(--text-muted);font-size:13px">Sin consumos.</p>';
+ html+='<div class="section-title mt-4">📥 Devoluciones</div>';
+ html+=dev.length?dev.slice(0,10).map(m=>{const a=articulo(m.artId);return '<div class="movement-item"><div class="movement-info"><div class="name">'+esc(a?a.nombre:'?')+'</div><div class="meta">'+fmt(m.fecha)+'</div></div><div class="movement-amount amount-positive">+'+m.cant+'</div></div>'}).join(''):'<p style="color:var(--text-muted);font-size:13px">Sin devoluciones.</p>';
+ html+='<button class="btn-secondary" onclick="closeM(\'ov-detalle-persona\')">Cerrar</button>';
+ document.getElementById('detalle-persona-body').innerHTML=html;openM('ov-detalle-persona');}
+
+/* ── Render con botones de edición y detalle ── */
+function renderArticulos(){renderTipoChips();const q=(document.getElementById('q-art').value||'').toLowerCase();const list=db.articles.filter(a=>(filtroTipo==='todos'||a.tipo===filtroTipo)&&(a.nombre.toLowerCase().includes(q)||(a.codigo||'').toLowerCase().includes(q)));
+document.getElementById('lista-articulos').innerHTML=list.length?list.map(a=>{const d=disponibles(a);const st=d<=0?'stat-danger':(a.min>0&&d<=a.min?'stat-warning':'');return '<div class="article-card" onclick="verDetalle(\''+a.id+'\')"><div class="article-header"><div class="article-icon">'+TIPOS[a.tipo].icon+'</div><div>'+(canEdit()?'<button class="edit-btn" onclick="event.stopPropagation();editarArticulo(\''+a.id+'\')">'+PENCIL+'</button>':'')+'<button class="article-delete" onclick="event.stopPropagation();confirmarEliminarArticulo(\''+a.id+'\')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></div><div class="article-name">'+esc(a.nombre)+'</div><div class="article-code">'+esc(a.codigo||'s/código')+' · '+TIPOS[a.tipo].l+'</div><div class="article-stats"><div class="stat '+st+'"><div class="stat-value">'+d+'</div><div class="stat-label">Disponibles</div></div><div class="stat"><div class="stat-value">'+asignados(a)+'</div><div class="stat-label">Asignados</div></div><div class="stat"><div class="stat-value">'+(a.total||0)+'</div><div class="stat-label">Total</div></div></div></div>';}).join(''):'<div class="empty-state"><h3>Sin artículos</h3><p>Crea el primero con el botón +</p></div>';}
+
+function renderPersonas(){const q=(document.getElementById('q-per').value||'').toLowerCase();const list=db.people.filter(p=>p.nombre.toLowerCase().includes(q));
+document.getElementById('lista-personas').innerHTML=(canEdit()?'<button class="btn-primary mb-4" onclick="nuevaPersona()">＋ Nueva persona</button>':'')+(list.length?list.map(p=>{const tiene=db.movements.filter(m=>m.personaId===p.id&&m.tipo==='asignacion'&&m.estado==='activo'&&(m.cant-(m.devuelto||0))>0);const agg={};tiene.forEach(m=>{if(!agg[m.artId])agg[m.artId]={c:0,u:m.ubic};agg[m.artId].c+=m.cant-(m.devuelto||0);});const rows=Object.entries(agg).map(([id,v])=>{const a=articulo(id);return '<div class="person-detail-row"><span class="label">'+esc(a?a.nombre:'?')+' · '+esc(v.u)+'</span><span class="value">'+v.c+'</span></div>'}).join('');return '<div class="person-card" onclick="verDetallePersona(\''+p.id+'\')"><div class="person-header"><div class="person-avatar">'+p.nombre.charAt(0)+'</div><div class="person-info"><div class="person-name">'+esc(p.nombre)+'</div><div class="person-role">'+esc(p.cargo||'Sin cargo')+'</div></div><span class="person-badge '+(tiene.length?'':'ok')+'">'+tiene.length+' por devolver</span>'+(canEdit()?'<button class="edit-btn" onclick="event.stopPropagation();editarPersona(\''+p.id+'\')">'+PENCIL+'</button>':'')+(currentRole==='admin'?'<button class="article-delete" onclick="event.stopPropagation();confirmarEliminarPersona(\''+p.id+'\')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>':'')+'</div>'+(tiene.length?'<div class="person-details">'+rows+'</div>':'')+'</div>';}).join(''):'<div class="empty-state"><h3>Sin personas</h3></div>';}
+
+function renderAsignados(){const q=(document.getElementById('q-asig').value||'').toLowerCase();let as=db.movements.filter(m=>m.tipo==='asignacion');as=asigTab==='activos'?as.filter(m=>m.estado==='activo'&&(m.cant-(m.devuelto||0))>0):as.filter(m=>m.estado==='devuelto');const list=as.filter(m=>{const a=articulo(m.artId);return !q||(a&&a.nombre.toLowerCase().includes(q))||persona(m.personaId).toLowerCase().includes(q)||(m.ubic||'').toLowerCase().includes(q)}).sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));
+document.getElementById('lista-asignados').innerHTML=list.length?list.map(m=>{const a=articulo(m.artId);const r=m.cant-(m.devuelto||0);return '<div class="movement-item" onclick="verDetalleMovimiento(\''+m.id+'\')"><div class="movement-info"><div class="name">'+esc(a?a.nombre:'?')+'</div><div class="meta">👤 '+esc(persona(m.personaId))+' · 📍 '+esc(m.ubic)+' · '+fmt(m.fecha)+'</div></div><div class="movement-amount">'+r+'</div>'+(asigTab==='activos'?(canEdit()?'<button class="edit-btn" onclick="event.stopPropagation();editarAsignacion(\''+m.id+'\')">'+PENCIL+'</button>':'')+'<button class="btn-mini btn-ghost" onclick="event.stopPropagation();devolverDesde(\''+m.id+'\')">Devolver</button>':'')+'</div>';}).join(''):'<div class="empty-state"><h3>'+(asigTab==='activos'?'Nada en circulación':'Sin devoluciones')+'</h3></div>';}
+
+Object.assign(window,{renderAll,setFiltroTipo,setFiltroMov,renderTipoChips,renderMovChips,savePersona,nuevaPersona,editarPersona,editarArticulo,editarAsignacion,saveEditAsignacion,verDetallePersona,renderArticulos,renderPersonas,renderAsignados});
 </script>
 </body>
-</html>
+</html> 
