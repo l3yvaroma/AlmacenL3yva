@@ -132,7 +132,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
   <button class="btn-primary" id="li-btn" onclick="loginSubmit()">Entrar</button>
   <div style="margin-top:14px;font-size:11px;color:var(--text-muted);text-align:center">El primer usuario es <b style="color:var(--accent)">Administrador</b>. Los demás quedan <b style="color:var(--warning)">pendientes</b>.</div>
 </div></div>
-
 <div class="phone">
   <div class="header"><h1>L3yvaINV</h1>
     <div class="header-actions">
@@ -184,7 +183,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     <div class="nav-item" data-s="personas" onclick="go('personas')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span>Personas</span></div>
     <div class="nav-item" data-s="historial" onclick="go('historial')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Historial</span></div>
   </div>
-
   <div class="modal-overlay" id="ov-acciones"><div class="modal-sheet"><div class="modal-grab"></div><div class="modal-title">¿Qué deseas registrar?</div><div class="modal-subtitle">Elige el tipo de movimiento</div>
     <div style="display:flex;flex-direction:column;gap:8px">
       <button class="btn-secondary" onclick="accion('articulo')" style="text-align:left">📦 Nuevo artículo</button>
@@ -193,7 +191,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
       <button class="btn-secondary" onclick="accion('devolver')" style="text-align:left">📥 Registrar devolución</button>
       <button class="btn-secondary" onclick="accion('consumo')" style="text-align:left">🧻 Consumo / salida definitiva</button>
     </div></div></div>
-
   <div class="modal-overlay" id="ov-articulo"><div class="modal-sheet"><div class="modal-grab"></div><div class="modal-title">Nuevo artículo</div><div class="modal-subtitle">Se crea en la nube y se sincroniza.</div>
     <input type="hidden" id="art-id">
     <div class="form-field"><label class="form-label">Nombre *</label><input class="form-input" id="art-nombre" placeholder="Ej: Taladro percutor Bosch"></div>
@@ -201,14 +198,12 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     <div class="form-field"><label class="form-label">Tipo *</label><select class="form-select" id="art-tipo"><option value="consumible">Consumible</option><option value="herramienta">Herramienta</option><option value="equipo">Equipo</option><option value="activo_fijo">Activo fijo</option><option value="otro">Otro (devolución)</option></select></div>
     <div class="form-grid"><div class="form-field"><label class="form-label">Cantidad total *</label><input class="form-input" id="art-total" type="number" min="0" value="0"></div><div class="form-field"><label class="form-label">Stock mínimo</label><input class="form-input" id="art-min" type="number" min="0" value="0"></div></div>
     <button class="btn-primary" onclick="saveArticulo()">Guardar artículo</button><button class="btn-secondary" onclick="closeM('ov-articulo')">Cancelar</button></div></div>
-
   <div class="modal-overlay" id="ov-entrada"><div class="modal-sheet"><div class="modal-grab"></div><div class="modal-title">Entrada de stock</div><div class="modal-subtitle">Aumenta la cantidad disponible.</div>
     <div class="form-field"><label class="form-label">Artículo *</label><select class="form-select" id="en-art"></select></div>
     <div class="form-grid"><div class="form-field"><label class="form-label">Cantidad *</label><input class="form-input" id="en-cant" type="number" min="1" value="1"></div><div class="form-field"><label class="form-label">Fecha</label><input class="form-input" id="en-fecha" type="date"></div></div>
     <div class="form-field"><label class="form-label">Motivo</label><select class="form-select" id="en-motivo"><option>Compra</option><option>Transferencia</option><option>Ajuste de inventario</option><option>Otro</option></select></div>
     <div class="form-field"><label class="form-label">Notas</label><input class="form-input" id="en-notas" placeholder="Ej: OC #123..."></div>
     <button class="btn-primary" onclick="saveEntrada()">Registrar entrada</button><button class="btn-secondary" onclick="closeM('ov-entrada')">Cancelar</button></div></div>
-
   <div class="modal-overlay" id="ov-asignar"><div class="modal-sheet"><div class="modal-grab"></div><div class="modal-title">Asignar artículo</div><div class="modal-subtitle">Validado en la nube.</div>
     <div class="form-field"><label class="form-label">Artículo *</label><select class="form-select" id="as-art"></select></div>
     <div class="form-grid"><div class="form-field"><label class="form-label">Cantidad *</label><input class="form-input" id="as-cant" type="number" min="1" value="1"></div><div class="form-field"><label class="form-label">Fecha</label><input class="form-input" id="as-fecha" type="date"></div></div>
@@ -216,14 +211,12 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     <div class="form-field"><label class="form-label">Ubicación / destino *</label><select class="form-select" id="as-ubic"></select></div>
     <div class="form-field"><label class="form-label">Notas</label><input class="form-input" id="as-notas" placeholder="Observaciones..."></div>
     <button class="btn-primary" onclick="saveAsignacion()">Registrar asignación</button><button class="btn-secondary" onclick="closeM('ov-asignar')">Cancelar</button></div></div>
-
   <div class="modal-overlay" id="ov-devolver"><div class="modal-sheet"><div class="modal-grab"></div><div class="modal-title">Registrar devolución</div><div class="modal-subtitle">El artículo vuelve al almacén.</div>
     <div class="form-field"><label class="form-label">Asignación a devolver *</label><select class="form-select" id="dv-asig" onchange="showDvInfo()"></select></div><div id="dv-info"></div>
     <div class="form-grid"><div class="form-field"><label class="form-label">Cantidad *</label><input class="form-input" id="dv-cant" type="number" min="1" value="1"></div><div class="form-field"><label class="form-label">Fecha</label><input class="form-input" id="dv-fecha" type="date"></div></div>
     <div class="form-field"><label class="form-label">Estado</label><select class="form-select" id="dv-estado"><option>Buen estado</option><option>Con desgaste</option><option>Dañado</option><option>Extraviado parcial</option></select></div>
     <div class="form-field"><label class="form-label">Notas</label><input class="form-input" id="dv-notas" placeholder="Observaciones..."></div>
     <button class="btn-primary" onclick="saveDevolucion()">Confirmar devolución</button><button class="btn-secondary" onclick="closeM('ov-devolver')">Cancelar</button></div></div>
-
   <div class="modal-overlay" id="ov-consumo"><div class="modal-sheet"><div class="modal-grab"></div><div class="modal-title">Consumo / salida definitiva</div><div class="modal-subtitle">Sale del almacén y no regresa.</div>
     <div class="form-field"><label class="form-label">Artículo *</label><select class="form-select" id="co-art"></select></div>
     <div class="form-grid"><div class="form-field"><label class="form-label">Cantidad *</label><input class="form-input" id="co-cant" type="number" min="1" value="1"></div><div class="form-field"><label class="form-label">Fecha</label><input class="form-input" id="co-fecha" type="date"></div></div>
@@ -231,13 +224,11 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     <div class="form-field"><label class="form-label">Destino / ubicación *</label><select class="form-select" id="co-ubic"></select></div>
     <div class="form-field"><label class="form-label">Concepto</label><select class="form-select" id="co-motivo"><option>Entrega a personal</option><option>Uso en obra</option><option>Uso en oficina</option><option>Mantenimiento</option><option>Otro</option></select></div>
     <button class="btn-primary" onclick="saveConsumo()">Registrar salida</button><button class="btn-secondary" onclick="closeM('ov-consumo')">Cancelar</button></div></div>
-
   <div class="modal-overlay" id="ov-persona"><div class="modal-sheet"><div class="modal-grab"></div><div class="modal-title">Nueva persona</div><div class="modal-subtitle">Responsable que puede recibir artículos.</div>
     <input type="hidden" id="per-id">
     <div class="form-field"><label class="form-label">Nombre completo *</label><input class="form-input" id="per-nombre" placeholder="Ej: Juan Pérez"></div>
     <div class="form-field"><label class="form-label">Cargo / área</label><input class="form-input" id="per-cargo" placeholder="Ej: Residente de obra"></div>
     <button class="btn-primary" onclick="savePersona()">Guardar</button><button class="btn-secondary" onclick="closeM('ov-persona')">Cancelar</button></div></div>
-
   <div class="modal-overlay" id="ov-detalle"><div class="modal-sheet" id="detalle-body"></div></div>
   <div class="modal-overlay" id="ov-movimiento"><div class="modal-sheet" id="movimiento-body"></div></div>
   <div class="modal-overlay" id="ov-confirm"><div class="modal-sheet"><div class="modal-grab"></div><div class="modal-title" id="conf-title">⚠️ Confirmar</div><div class="modal-subtitle" id="conf-msg"></div>
@@ -258,7 +249,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     <button class="btn-secondary mt-4" onclick="closeM('ov-ai')">Cerrar</button></div></div>
   <div class="toast" id="toast"><span id="toast-msg"></span></div>
 </div>
-
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -379,9 +369,7 @@ function watchPending(){
   if(ban){if(currentRole==='admin'&&pend.length){ban.style.display='flex';document.getElementById('admin-pending-text').textContent='🔔 '+pend.length+' solicitud'+(pend.length!==1?'s':'')+' pendiente'+(pend.length!==1?'s':'')+'. Toca para aprobar.';}else ban.style.display='none';}
   if(currentRole==='admin'&&_pendPrev!==null&&pend.length>_pendPrev)showToast('🔔 Nueva solicitud de acceso pendiente');
   _pendPrev=pend.length;
-}
-
-function nuevaPersona(){document.getElementById('per-id').value='';document.getElementById('per-nombre').value='';document.getElementById('per-cargo').value='';document.querySelector('#ov-persona .modal-title').textContent='Nueva persona';openM('ov-persona');}
+}function nuevaPersona(){document.getElementById('per-id').value='';document.getElementById('per-nombre').value='';document.getElementById('per-cargo').value='';document.querySelector('#ov-persona .modal-title').textContent='Nueva persona';openM('ov-persona');}
 function editarPersona(id){const p=db.people.find(x=>x.id===id);if(!p)return;document.getElementById('per-id').value=id;document.getElementById('per-nombre').value=p.nombre;document.getElementById('per-cargo').value=p.cargo||'';document.querySelector('#ov-persona .modal-title').textContent='✏️ Editar persona';openM('ov-persona');}
 function editarArticulo(id){const a=db.articles.find(x=>x.id===id);if(!a)return;document.getElementById('art-id').value=id;document.getElementById('art-nombre').value=a.nombre;document.getElementById('art-codigo').value=a.codigo||'';document.getElementById('art-unidad').value=a.unidad||'';document.getElementById('art-tipo').value=a.tipo;document.getElementById('art-total').value=a.total||0;document.getElementById('art-min').value=a.min||0;openM('ov-articulo');}
 function editarAsignacion(id){const m=db.movements.find(x=>x.id===id);if(!m)return;document.getElementById('ea-id').value=id;document.getElementById('ea-persona').innerHTML=db.people.map(p=>'<option value="'+p.id+'" '+(p.id===m.personaId?'selected':'')+'>'+esc(p.nombre)+'</option>').join('');document.getElementById('ea-ubic').innerHTML=UBIC.map(u=>'<option '+(u===m.ubic?'selected':'')+'>'+u+'</option>').join('');document.getElementById('ea-notas').value=m.notas||'';openM('ov-edit-asig');}
