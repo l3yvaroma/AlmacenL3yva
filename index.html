@@ -21,7 +21,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .header-actions{display:flex;gap:8px}
 .icon-btn{width:38px;height:38px;border-radius:8px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer}
 .icon-btn svg{width:19px;height:19px;stroke:var(--text-secondary);fill:none;stroke-width:2}
-.user-chip{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:11px;font-weight:600;cursor:pointer}
+.user-chip{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:11px;font-weight:600}
 .user-chip .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
 .content{flex:1;overflow-y:auto;padding:16px 20px 100px;scrollbar-width:none}
 .content::-webkit-scrollbar{display:none}
@@ -30,6 +30,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .sync-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text-secondary)}
 .sync-bar .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+.sync-bar.warn{border-color:var(--warning);color:var(--warning)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .section-title{font-size:13px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
 .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
@@ -80,7 +81,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .person-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(245,158,11,.15);color:var(--warning)}
 .person-badge.ok{background:rgba(34,197,94,.15);color:var(--success)}
 .person-details{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
-.person-detail-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}
+.person-detail-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;font-size:13px}
 .person-detail-row .label{color:var(--text-muted)}
 .person-detail-row .value{font-weight:600}
 .tabs{display:flex;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:16px}
@@ -92,6 +93,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .btn-mini{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer}
 .btn-ghost{background:var(--card-hover);color:var(--text);border:1px solid var(--border)}
 .btn-danger{background:var(--danger);color:#fff}
+.btn-approve{background:var(--success);color:#fff}
 .btn-danger:disabled{opacity:.4}
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--surface);border-top:1px solid var(--border);padding:8px 20px 24px;display:flex;justify-content:space-around;z-index:40}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;cursor:pointer;position:relative}
@@ -147,6 +149,8 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .role-admin{background:rgba(57,255,20,.15);color:var(--accent)}
 .role-almacenista{background:rgba(34,197,94,.15);color:var(--success)}
 .role-consulta{background:rgba(161,161,170,.15);color:var(--text-secondary)}
+.role-pendiente{background:rgba(245,158,11,.15);color:var(--warning)}
+.role-rechazado{background:rgba(239,68,68,.15);color:var(--danger)}
 .solo-lectura .fab-nav,.solo-lectura .article-delete,.solo-lectura #btn-sel{display:none!important}
 .text-accent{color:var(--accent)}
 .mt-4{margin-top:16px}.mb-4{margin-bottom:16px}
@@ -166,7 +170,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     <div class="form-field"><label class="form-label">Correo electrónico</label><input class="form-input" id="li-email" type="email" placeholder="tucorreo@empresa.com"></div>
     <div class="form-field"><label class="form-label">Contraseña</label><input class="form-input" id="li-pass" type="password" placeholder="Mínimo 6 caracteres"></div>
     <button class="btn-primary" id="li-btn" onclick="loginSubmit()">Entrar</button>
-    <div style="margin-top:14px;font-size:11px;color:var(--text-muted);text-align:center">El primer usuario registrado se convierte en <b style="color:var(--accent)">Administrador</b>.</div>
+    <div style="margin-top:14px;font-size:11px;color:var(--text-muted);text-align:center">El primer usuario es <b style="color:var(--accent)">Administrador</b>. Los demás quedan <b style="color:var(--warning)">pendientes</b> de aprobación.</div>
   </div>
 </div>
 
@@ -177,12 +181,14 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
       <button class="icon-btn" onclick="exportExcel()" title="Excel"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
       <button class="icon-btn" id="btn-users" onclick="openM('ov-usuarios')" title="Usuarios" style="display:none"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>
       <button class="icon-btn" onclick="openAI()" title="IA"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></button>
-      <div class="user-chip" onclick="loginSalir()"><span class="dot"></span><span id="user-name">—</span></div>
+      <button class="icon-btn" onclick="loginSalir()" title="Cerrar sesión"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+      <div class="user-chip"><span class="dot"></span><span id="user-name">—</span></div>
     </div>
   </div>
 
   <div class="content">
     <div class="screen active" id="scr-inicio">
+      <div class="sync-bar" id="pending-banner" style="display:none"><span>⏳</span><span id="pending-text">Tu acceso está pendiente de aprobación.</span></div>
       <div class="sync-bar"><span class="dot"></span><span id="sync-status">Conectado a la nube · sincronización en tiempo real</span></div>
       <div class="section-title">Resumen general</div>
       <div class="kpi-grid" id="kpis"></div>
@@ -334,7 +340,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     <button class="btn-secondary" onclick="closeM('ov-confirm')">Cancelar</button>
   </div></div>
   <div class="modal-overlay" id="ov-usuarios"><div class="modal-sheet">
-    <div class="modal-grab"></div><div class="modal-title">👥 Usuarios y roles</div><div class="modal-subtitle">Solo el administrador puede cambiar roles.</div>
+    <div class="modal-grab"></div><div class="modal-title">👥 Usuarios y solicitudes</div><div class="modal-subtitle">Aprueba o asigna roles. Solo admin.</div>
     <div id="users-list"></div>
     <button class="btn-secondary" onclick="closeM('ov-usuarios')">Cerrar</button>
   </div></div>
@@ -384,6 +390,7 @@ function openM(id){document.getElementById(id).classList.add('open')}
 function closeM(id){document.getElementById(id).classList.remove('open')}
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
 
+/* ═══════ LOGIN + ROLES ═══════ */
 function loginTab(m){loginMode=m;document.getElementById('lt-entrar').classList.toggle('active',m==='entrar');document.getElementById('lt-registrar').classList.toggle('active',m==='registrar');document.getElementById('ff-nombre').style.display=m==='registrar'?'block':'none';document.getElementById('li-btn').textContent=m==='registrar'?'Crear cuenta':'Entrar';}
 async function loginSubmit(){
   const email=document.getElementById('li-email').value.trim(),pass=document.getElementById('li-pass').value,nombre=document.getElementById('li-nombre').value.trim();
@@ -394,9 +401,9 @@ async function loginSubmit(){
     if(loginMode==='registrar'){
       const cred=await createUserWithEmailAndPassword(auth,email,pass);
       const ex=await getDocs(collection(fdb,'users'));
-      const role=ex.empty?'admin':'consulta';
+      const role=ex.empty?'admin':'pendiente';
       await setDoc(doc(fdb,'users',cred.user.uid),{email,nombre:nombre||email.split('@')[0],role,creado:today()});
-      showToast(role==='admin'?'🎉 Eres ADMINISTRADOR':'✅ Cuenta creada (consulta)');
+      showToast(role==='admin'?'🎉 Eres ADMINISTRADOR':'⏳ Solicitud enviada, espera aprobación');
     }else await signInWithEmailAndPassword(auth,email,pass);
   }catch(e){showToast('⚠️ '+traducirError(e.code));}
   finally{btn.disabled=false;btn.textContent=loginMode==='registrar'?'Crear cuenta':'Entrar';}
@@ -408,14 +415,20 @@ onAuthStateChanged(auth,async u=>{
   if(!u){document.getElementById('login-screen').style.display='flex';unsubs.forEach(f=>f());unsubs=[];}
   else{
     const ud=await getDoc(doc(fdb,'users',u.uid));
-    currentRole=ud.exists()?(ud.data().role||'consulta'):'consulta';
+    currentRole=ud.exists()?(ud.data().role||'consulta'):'pendiente';
     document.getElementById('login-screen').style.display='none';
     document.getElementById('user-name').textContent=(ud.exists()?ud.data().nombre:u.email)||'';
     document.getElementById('btn-users').style.display=currentRole==='admin'?'flex':'none';
+    const pb=document.getElementById('pending-banner');
+    if(currentRole==='pendiente'){pb.style.display='flex';document.getElementById('pending-text').textContent='⏳ Tu acceso está pendiente de aprobación por un administrador.';}
+    else if(currentRole==='rechazado'){pb.style.display='flex';pb.classList.add('warn');document.getElementById('pending-text').textContent='⛔ Tu acceso fue rechazado. Contacta al administrador.';}
+    else pb.style.display='none';
     document.body.classList.toggle('solo-lectura',!canEdit());
     startSync();
   }
 });
+
+/* ═══════ SINCRONIZACIÓN ═══════ */
 function startSync(){
   unsubs.push(onSnapshot(collection(fdb,'articulos'),s=>{db.articles=s.docs.map(d=>({id:d.id,...d.data()}));renderAll();},()=>setSync(false)));
   unsubs.push(onSnapshot(collection(fdb,'personas'),s=>{db.people=s.docs.map(d=>({id:d.id,...d.data()}));renderAll();}));
@@ -423,8 +436,9 @@ function startSync(){
   unsubs.push(onSnapshot(collection(fdb,'users'),s=>{usersList=s.docs.map(d=>({id:d.id,...d.data()}));renderUsers();}));
   setSync(true);
 }
-function setSync(ok){document.getElementById('sync-status').textContent=ok?'☁️ Conectado a la nube':'📴 Sin conexión · caché local';}
+function setSync(ok){document.getElementById('sync-status').textContent=ok?'☁️ Conectado a la nube · sincronización en tiempo real':'📴 Sin conexión · caché local';}
 
+/* ═══════ TRANSACCIÓN DE STOCK (integridad) ═══════ */
 async function ajustarStock(artId,tipo,cant){
   return runTransaction(fdb,async tx=>{
     const ref=doc(fdb,'articulos',artId);const snap=await tx.get(ref);
@@ -438,22 +452,28 @@ async function ajustarStock(artId,tipo,cant){
 }
 async function addMov(m){m.fecha=m.fecha||today();m.hora=m.hora||ahora();m.user=m.user||((currentUser&&currentUser.email)||'—');await addDoc(collection(fdb,'movimientos'),m);}
 
+/* ═══════ GUARDAR ═══════ */
 async function saveArticulo(){if(!canEdit())return showToast('⚠️ Sin permisos');const n=document.getElementById('art-nombre').value.trim(),total=parseInt(document.getElementById('art-total').value)||0;if(!n)return showToast('Nombre obligatorio');const data={nombre:n,codigo:document.getElementById('art-codigo').value.trim(),tipo:document.getElementById('art-tipo').value,unidad:document.getElementById('art-unidad').value.trim()||'und',total,min:parseInt(document.getElementById('art-min').value)||0};const id=document.getElementById('art-id').value;try{if(id)await updateDoc(doc(fdb,'articulos',id),data);else{data.asignados=0;await addDoc(collection(fdb,'articulos'),data);}closeM('ov-articulo');showToast('Artículo guardado');}catch(e){showToast('⚠️ '+e.message);}}
 async function saveEntrada(){if(!canEdit())return showToast('⚠️ Sin permisos');const a=document.getElementById('en-art').value,c=parseInt(document.getElementById('en-cant').value)||0;if(!a||c<=0)return showToast('Completa artículo y cantidad');try{await ajustarStock(a,'entrada',c);await addMov({artId:a,tipo:'entrada',cant:c,personaId:'',ubic:'Almacén',devuelto:0,estado:'ok',notas:[document.getElementById('en-motivo').value,document.getElementById('en-notas').value.trim()].filter(Boolean).join(' · ')});closeM('ov-entrada');showToast('Entrada sincronizada');}catch(e){showToast('⚠️ '+e.message);}}
 async function saveAsignacion(){if(!canEdit())return showToast('⚠️ Sin permisos');const a=document.getElementById('as-art').value,p=document.getElementById('as-persona').value,u=document.getElementById('as-ubic').value,c=parseInt(document.getElementById('as-cant').value)||0;if(!a||!p||!u||c<=0)return showToast('Completa todos los campos');try{await ajustarStock(a,'asignacion',c);await addMov({artId:a,tipo:'asignacion',cant:c,personaId:p,ubic:u,devuelto:0,estado:'activo',notas:document.getElementById('as-notas').value.trim()});closeM('ov-asignar');showToast('Asignación sincronizada');}catch(e){showToast('⚠️ '+e.message);}}
 async function saveDevolucion(){if(!canEdit())return showToast('⚠️ Sin permisos');const id=document.getElementById('dv-asig').value,c=parseInt(document.getElementById('dv-cant').value)||0;if(!id||c<=0)return showToast('Completa la devolución');const m=db.movements.find(x=>x.id===id);if(!m)return;const rest=m.cant-(m.devuelto||0);if(c>rest)return showToast('Máximo: '+rest);try{const nd=(m.devuelto||0)+c;await updateDoc(doc(fdb,'movimientos',id),{devuelto:nd,estado:nd>=m.cant?'devuelto':'activo'});await ajustarStock(m.artId,'devolucion',c);await addMov({artId:m.artId,tipo:'devolucion',cant:c,personaId:m.personaId,ref:id,ubic:'Almacén',devuelto:0,estado:'ok',notas:[document.getElementById('dv-estado').value,document.getElementById('dv-notas').value.trim()].filter(Boolean).join(' · ')});closeM('ov-devolver');showToast('Devolución sincronizada');}catch(e){showToast('⚠️ '+e.message);}}
 async function saveConsumo(){if(!canEdit())return showToast('⚠️ Sin permisos');const a=document.getElementById('co-art').value,c=parseInt(document.getElementById('co-cant').value)||0,u=document.getElementById('co-ubic').value;if(!a||c<=0||!u)return showToast('Completa todos los campos');try{await ajustarStock(a,'consumo',c);await addMov({artId:a,tipo:'consumo',cant:c,personaId:document.getElementById('co-persona').value,ubic:u,devuelto:0,estado:'consumido',notas:document.getElementById('co-motivo').value});closeM('ov-consumo');showToast('Consumo sincronizado');}catch(e){showToast('⚠️ '+e.message);}}
 async function savePersona(){if(!canEdit())return showToast('⚠️ Sin permisos');const n=document.getElementById('per-nombre').value.trim();if(!n)return showToast('Nombre obligatorio');await addDoc(collection(fdb,'personas'),{nombre:n,cargo:document.getElementById('per-cargo').value.trim()});closeM('ov-persona');showToast('Persona guardada');}
+
+/* ═══════ ELIMINAR ═══════ */
 async function eliminarArticulo(id){for(const m of db.movements.filter(m=>m.artId===id))await deleteDoc(doc(fdb,'movimientos',m.id));await deleteDoc(doc(fdb,'articulos',id));showToast('Artículo eliminado');}
 async function eliminarPersona(id){for(const m of db.movements.filter(m=>m.personaId===id))await updateDoc(doc(fdb,'movimientos',m.id),{personaId:''});await deleteDoc(doc(fdb,'personas',id));showToast('Persona eliminada');}
 async function eliminarMovimientos(ids){for(const id of[...ids]){const m=db.movements.find(x=>x.id===id);if(!m)continue;if(m.tipo==='asignacion')for(const d of db.movements.filter(d=>d.ref===id))await deleteDoc(doc(fdb,'movimientos',d.id));if(m.tipo==='devolucion'&&m.ref){const p=db.movements.find(x=>x.id===m.ref);if(p){const nd=Math.max(0,(p.devuelto||0)-m.cant);await updateDoc(doc(fdb,'movimientos',p.id),{devuelto:nd,estado:nd>=p.cant?'devuelto':'activo'});}}if(m.tipo==='entrada')await runTransaction(fdb,async tx=>{const r=doc(fdb,'articulos',m.artId);const s=await tx.get(r);if(s.exists())tx.update(r,{total:Math.max(0,(s.data().total||0)-m.cant)});});if(m.tipo==='consumo')await runTransaction(fdb,async tx=>{const r=doc(fdb,'articulos',m.artId);const s=await tx.get(r);if(s.exists())tx.update(r,{total:(s.data().total||0)+m.cant});});if(m.tipo==='asignacion')await runTransaction(fdb,async tx=>{const r=doc(fdb,'articulos',m.artId);const s=await tx.get(r);if(s.exists())tx.update(r,{asignados:Math.max(0,(s.data().asignados||0)-(m.cant-(m.devuelto||0)))});});await deleteDoc(doc(fdb,'movimientos',id));}showToast('Movimientos eliminados');}
-async function cambiarRol(u,r){await updateDoc(doc(fdb,'users',u),{role:r});showToast('Rol actualizado');}
-/* ====== CONTINÚA EN PARTE 3 ====== */
+
+/* ═══════ ROLES (admin) ═══════ */
+async function cambiarRol(u,r){await updateDoc(doc(fdb,'users',u),{role:r});showToast('Rol actualizado a: '+r);}
+async function aprobarUsuario(u){await updateDoc(doc(fdb,'users',u),{role:'almacenista'});showToast('✅ Usuario aprobado como almacenista');}
+async function rechazarUsuario(u){await updateDoc(doc(fdb,'users',u),{role:'rechazado'});showToast(' Usuario rechazado');}
 /* ═══════ RENDER Y UI ═══════ */
 function fillSelect(id,fn,filtro,ph){const el=document.getElementById(id);const list=filtro?db.articles.filter(filtro):db.articles;el.innerHTML=(ph?'<option value="">'+ph+'</option>':'<option value="">Selecciona...</option>')+list.map(a=>'<option value="'+a.id+'">'+fn(a)+'</option>').join('');}
 function showDvInfo(){const id=document.getElementById('dv-asig').value;const b=document.getElementById('dv-info');if(!id){b.innerHTML='';return}const m=db.movements.find(x=>x.id===id);if(!m){b.innerHTML='';return}const a=articulo(m.artId);b.innerHTML='<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:14px;font-size:13px;color:var(--text-secondary)">👤 '+esc(persona(m.personaId))+' · 📍 '+esc(m.ubic)+'<br>Pendiente: <b style="color:var(--accent)">'+(m.cant-(m.devuelto||0))+'</b></div>';document.getElementById('dv-cant').max=m.cant-(m.devuelto||0);}
 function movRow(m,sel){const a=articulo(m.artId);const bc=m.tipo==='entrada'||m.tipo==='devolucion'?'badge-entrada':m.tipo==='consumo'?'badge-consumo':'badge-salida';const ac=(m.tipo==='entrada'||m.tipo==='devolucion')?'amount-positive':'amount-negative';const sg=(m.tipo==='entrada'||m.tipo==='devolucion')?'+':'-';const chk=sel?'<input type="checkbox" class="list-checkbox" '+(seleccionados.has(m.id)?'checked':'')+' onchange="toggleSel(\''+m.id+'\')">' :'';return '<div class="movement-item" '+(!sel?'onclick="verDetalleMovimiento(\''+m.id+'\')"':'')+'>'+chk+'<span class="movement-badge '+bc+'">'+m.tipo.toUpperCase()+'</span><div class="movement-info"><div class="name">'+esc(a?a.nombre:'?')+'</div><div class="meta">'+fmt(m.fecha)+(m.hora?' '+m.hora:'')+' · '+esc(m.user||'—')+'</div></div><div class="movement-amount '+ac+'">'+sg+m.cant+'</div></div>';}
-function renderInicio(){const arts=db.articles;const bajo=arts.filter(a=>disponibles(a)<=a.min&&a.min>0).length;const entH=db.movements.filter(m=>m.tipo==='entrada'&&m.fecha===today()).reduce((s,m)=>s+m.cant,0);const salH=db.movements.filter(m=>(m.tipo==='consumo'||m.tipo==='asignacion')&&m.fecha===today()).reduce((s,m)=>s+m.cant,0);const asig=arts.reduce((s,a)=>s+asignados(a),0);
+function renderInicio(){const arts=db.articles;const bajo=arts.filter(a=>disponibles(a)<=a.min&&a.min>0).length;const entH=db.movements.filter(m=>m.tipo==='entrada'&&m.fecha===today()).reduce((s,m)=>s+m.cant,0);const asig=arts.reduce((s,a)=>s+asignados(a),0);const salH=db.movements.filter(m=>(m.tipo==='consumo'||m.tipo==='asignacion')&&m.fecha===today()).reduce((s,m)=>s+m.cant,0);
 document.getElementById('kpis').innerHTML='<div class="kpi-card"><div class="icon">'+TIPOS.consumible.icon+'</div><div class="value">'+arts.length+'</div><div class="label">Productos</div></div><div class="kpi-card warning"><div class="icon"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg></div><div class="value">'+bajo+'</div><div class="label">Stock bajo</div></div><div class="kpi-card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div><div class="value">'+entH+'</div><div class="label">Entradas hoy</div></div><div class="kpi-card"><div class="icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div><div class="value">'+asig+'</div><div class="label">Asignados</div></div>';
 const ult=[...db.movements].sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha))).slice(0,3);
 document.getElementById('ultimos').innerHTML=ult.length?ult.map(m=>movRow(m,false)).join(''):'<div class="empty-state"><h3>Sin movimientos</h3><p>Registra tu primera operación</p></div>';}
@@ -478,22 +498,75 @@ function pedirConfirmacion(t,m,h,fn){document.getElementById('conf-title').textC
 function confirmarEliminarArticulo(id){const a=articulo(id);if(!a)return;pedirConfirmacion('🗑️ Eliminar artículo','Se eliminará "'+a.nombre+'" y su historial.','No se puede deshacer.',()=>eliminarArticulo(id));}
 function confirmarEliminarPersona(id){const p=db.people.find(x=>x.id===id);if(!p)return;pedirConfirmacion('🗑️ Eliminar persona','Se eliminará a "'+p.nombre+'".','Sus movimientos quedan sin responsable.',()=>eliminarPersona(id));}
 function confirmarEliminarMov(){if(!seleccionados.size)return;pedirConfirmacion('⚠️ Eliminar movimientos','Se eliminarán '+seleccionados.size+' de la nube.','Requiere rol administrador.',async()=>{await eliminarMovimientos([...seleccionados]);salirSeleccion();});}
+function renderUsers(){const el=document.getElementById('users-list');if(!el)return;
+el.innerHTML=usersList.map(u=>{const tag='<span class="role-tag role-'+(u.role||'pendiente')+'">'+(u.role||'pendiente')+'</span>';let ctl='';
+if(currentRole==='admin'){
+ if(u.role==='pendiente')ctl='<button class="btn-mini btn-approve" onclick="aprobarUsuario(\''+u.id+'\')">Aprobar</button> <button class="btn-mini btn-danger" onclick="rechazarUsuario(\''+u.id+'\')">Rechazar</button>';
+ else if(u.id!==currentUser.uid)ctl='<select class="form-select" style="width:auto;padding:6px" onchange="cambiarRol(\''+u.id+'\',this.value)"><option value="admin" '+(u.role==='admin'?'selected':'')+'>admin</option><option value="almacenista" '+(u.role==='almacenista'?'selected':'')+'>almacenista</option><option value="consulta" '+(u.role==='consulta'?'selected':'')+'>consulta</option></select>';
+ else ctl='<span style="font-size:11px;color:var(--text-muted)">tú</span>';
+}
+return '<div class="person-detail-row"><span class="label">'+esc(u.nombre||u.email)+'<br>'+tag+'</span><span class="value">'+ctl+'</span></div>';}).join('')||'<p style="color:var(--text-muted)">Sin usuarios</p>';}
 function verDetalle(id){const a=articulo(id);const as=db.movements.filter(m=>m.artId===id&&m.tipo==='asignacion'&&m.estado==='activo'&&(m.cant-(m.devuelto||0))>0);const h=[...db.movements].filter(m=>m.artId===id).sort((x,y)=>String(y.fecha).localeCompare(String(x.fecha)));
 document.getElementById('detalle-body').innerHTML='<div class="modal-grab"></div><div class="modal-title">'+TIPOS[a.tipo].l+': '+esc(a.nombre)+'</div><div class="modal-subtitle">'+esc(a.codigo||'s/código')+'</div><div class="kpi-grid"><div class="kpi-card"><div class="value">'+disponibles(a)+'</div><div class="label">En almacén</div></div><div class="kpi-card warning"><div class="value">'+asignados(a)+'</div><div class="label">Asignados</div></div></div><div class="section-title">📤 En circulación</div>'+(as.length?as.map(m=>'<div class="movement-item"><div class="movement-info"><div class="name">👤 '+esc(persona(m.personaId))+'</div><div class="meta">📍 '+esc(m.ubic)+' · '+fmt(m.fecha)+'</div></div><div class="movement-amount">'+(m.cant-(m.devuelto||0))+'</div></div>').join(''):'<p style="color:var(--text-muted);font-size:13px">Nada asignado.</p>')+'<div class="section-title mt-4">🕒 Historial</div>'+h.map(m=>movRow(m,false)).join('')+'<button class="btn-secondary" onclick="closeM(\'ov-detalle\')">Cerrar</button>';openM('ov-detalle');}
 function verDetalleMovimiento(id){const m=db.movements.find(x=>x.id===id);if(!m)return;const a=articulo(m.artId);const p=m.personaId?db.people.find(x=>x.id===m.personaId):null;const tl={entrada:'Entrada',asignacion:'Asignación',devolucion:'Devolución',consumo:'Consumo'}[m.tipo]||m.tipo;const el={activo:'🟡 En circulación',devuelto:'✅ Devuelto',consumido:'🔴 Consumido',ok:'✅ Completado'}[m.estado]||m.estado;
 document.getElementById('movimiento-body').innerHTML='<div class="modal-grab"></div><div class="modal-title">'+tl+'</div><div class="modal-subtitle">'+fmt(m.fecha)+(m.hora?' '+m.hora:'')+'</div><div class="detail-row"><span class="detail-label">Artículo</span><span class="detail-value">'+esc(a?a.nombre:'—')+'</span></div><div class="detail-row"><span class="detail-label">Cantidad</span><span class="detail-value text-accent">'+m.cant+'</span></div>'+(m.tipo==='asignacion'?'<div class="detail-row"><span class="detail-label">Pendiente</span><span class="detail-value">'+(m.cant-(m.devuelto||0))+'</span></div>':'')+'<div class="detail-row"><span class="detail-label">Responsable</span><span class="detail-value">'+esc(p?p.nombre:'—')+'</span></div><div class="detail-row"><span class="detail-label">Ubicación</span><span class="detail-value">'+esc(m.ubic)+'</span></div><div class="detail-row"><span class="detail-label">Estado</span><span class="detail-value">'+el+'</span></div><div class="detail-row"><span class="detail-label">Registró</span><span class="detail-value">'+esc(m.user||'—')+'</span></div>'+(m.tipo==='asignacion'&&m.estado==='activo'?'<button class="btn-primary mt-4" onclick="closeM(\'ov-movimiento\');devolverDesde(\''+m.id+'\')">📥 Registrar devolución</button>':'')+'<button class="btn-secondary" onclick="closeM(\'ov-movimiento\')">Cerrar</button>';openM('ov-movimiento');}
-function renderUsers(){const el=document.getElementById('users-list');if(!el)return;el.innerHTML=usersList.map(u=>'<div class="detail-row"><span class="detail-label">'+esc(u.nombre||u.email)+'<br><span class="role-tag role-'+(u.role||'consulta')+'">'+(u.role||'consulta')+'</span></span><span class="detail-value"><select class="form-select" style="width:auto;padding:8px" onchange="cambiarRol(\''+u.id+'\',this.value)" '+(currentRole==='admin'?'':'disabled')+'><option value="admin" '+(u.role==='admin'?'selected':'')+'>admin</option><option value="almacenista" '+(u.role==='almacenista'?'selected':'')+'>almacenista</option><option value="consulta" '+((!u.role||u.role==='consulta')?'selected':'')+'>consulta</option></select></span></div>').join('')||'<p style="color:var(--text-muted)">Sin usuarios</p>';}
 
 function go(s){if(modoSeleccion)salirSeleccion();document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById('scr-'+s).classList.add('active');document.querySelectorAll('.nav-item').forEach(x=>x.classList.toggle('active',x.dataset.s===s));renderAll();}
 function openFab(){if(!canEdit())return showToast('⚠️ Tu rol es solo consulta');openM('ov-acciones');}
 function accion(t){closeM('ov-acciones');
  if(t==='articulo'){['art-id','art-nombre','art-codigo','art-unidad'].forEach(i=>document.getElementById(i).value='');document.getElementById('art-total').value=0;document.getElementById('art-min').value=0;openM('ov-articulo');}
  else if(t==='entrada'){fillSelect('en-art',a=>esc(a.nombre)+' — disp: '+disponibles(a));document.getElementById('en-fecha').value=today();document.getElementById('en-cant').value=1;openM('ov-entrada');}
- else if(t==='asignar'){fillSelect('as-art',a=>esc(a.nombre)+' — disp: '+disponibles(a),a=>disponibles(a)>0);fillSelect('as-persona',p=>esc(p.nombre),null,null);document.getElementById('as-persona').innerHTML='<option value="">Selecciona...</option>'+db.people.map(p=>'<option value="'+p.id+'">'+esc(p.nombre)+'</option>').join('');const u=document.getElementById('as-ubic');u.innerHTML='<option value="">Selecciona...</option>'+UBIC.map(x=>'<option>'+x+'</option>').join('');document.getElementById('as-fecha').value=today();document.getElementById('as-cant').value=1;openM('ov-asignar');}
+ else if(t==='asignar'){fillSelect('as-art',a=>esc(a.nombre)+' — disp: '+disponibles(a),a=>disponibles(a)>0);document.getElementById('as-persona').innerHTML='<option value="">Selecciona...</option>'+db.people.map(p=>'<option value="'+p.id+'">'+esc(p.nombre)+'</option>').join('');const u=document.getElementById('as-ubic');u.innerHTML='<option value="">Selecciona...</option>'+UBIC.map(x=>'<option>'+x+'</option>').join('');document.getElementById('as-fecha').value=today();document.getElementById('as-cant').value=1;openM('ov-asignar');}
  else if(t==='devolver'){const as=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo'&&(m.cant-(m.devuelto||0))>0);document.getElementById('dv-asig').innerHTML='<option value="">Selecciona...</option>'+as.map(m=>'<option value="'+m.id+'">'+esc(articulo(m.artId)?articulo(m.artId).nombre:'?')+' → '+esc(persona(m.personaId))+' ('+(m.cant-(m.devuelto||0))+')</option>').join('');document.getElementById('dv-fecha').value=today();document.getElementById('dv-cant').value=1;openM('ov-devolver');}
  else if(t==='consumo'){fillSelect('co-art',a=>esc(a.nombre)+' — disp: '+disponibles(a));document.getElementById('co-persona').innerHTML='<option value="">— Sin responsable —</option>'+db.people.map(p=>'<option value="'+p.id+'">'+esc(p.nombre)+'</option>').join('');const u=document.getElementById('co-ubic');u.innerHTML='<option value="">Selecciona...</option>'+UBIC.map(x=>'<option>'+x+'</option>').join('');document.getElementById('co-fecha').value=today();document.getElementById('co-cant').value=1;openM('ov-consumo');}}
-function openAI(){showToast('🤖 La IA se re-activará en la próxima actualización');}
 
+/* ═══════ IA (QWEN) REINTEGRADA ═══════ */
+const QWEN_KEY='sk-ws-H.DMLDYXH.B7DP.MEQCIEadN2MZxHF09JwM3mQ8E1ucdQaDgJEoOZK2K6LV6kydAiBd_vLuxESH5Uqlo3Sz1auPjz6TvGDv6Dh8EgTYpTxwMg';
+function openAI(){if(!canEdit())return showToast('⚠️ Tu rol es solo consulta');openM('ov-ai');document.getElementById('ai-input').focus();}
+async function llamarQwen(prompt){
+  const int=[{t:'o',u:'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions',m:'qwen-plus'},{t:'o',u:'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions',m:'qwen-turbo'},{t:'a',u:'https://ws-codv7e1dfpvk7kl6.ap-southeast-1.maas.aliyuncs.com/apps/anthropic/v1/messages',m:'qwen-plus'}];
+  let lastErr='';
+  for(const it of int){try{let h,b,p;
+    if(it.t==='o'){h={'Content-Type':'application/json','Authorization':'Bearer '+QWEN_KEY};b=JSON.stringify({model:it.m,messages:[{role:'user',content:prompt}],temperature:0.2});p=d=>d.choices&&d.choices[0]?d.choices[0].message.content:'';}
+    else{h={'Content-Type':'application/json','x-api-key':QWEN_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};b=JSON.stringify({model:it.m,max_tokens:1024,messages:[{role:'user',content:prompt}]});p=d=>d.content&&d.content[0]?d.content[0].text:'';}
+    const r=await fetch(it.u,{method:'POST',headers:h,body:b});
+    if(r.ok){const d=await r.json();const t=p(d);if(t)return{ok:true,text:t};lastErr='Respuesta vacía';}else lastErr='HTTP '+r.status;
+  }catch(e){lastErr='Red/CORS';}}
+  return{ok:false,error:lastErr};
+}
+function estadoResumen(){return{articulos:db.articles.map(a=>({nombre:a.nombre,tipo:a.tipo,unidad:a.unidad,total:a.total,disponibles:disponibles(a),asignados:asignados(a)})),personas:db.people.map(p=>({nombre:p.nombre,tiene:db.movements.filter(m=>m.personaId===p.id&&m.tipo==='asignacion'&&m.estado==='activo'&&(m.cant-(m.devuelto||0))>0).reduce((acc,m)=>{const a=articulo(m.artId);const e=acc.find(x=>x.articulo===(a?a.nombre:'?'));if(e)e.cantidad+=m.cant-(m.devuelto||0);else acc.push({articulo:a?a.nombre:'?',cantidad:m.cant-(m.devuelto||0),ubicacion:m.ubic});return acc},[])}))};}
+async function ejecutarOperaciones(ops){
+  const log=[];
+  for(const op of(ops||[])){try{
+    if(op.op==='crear_persona'){const ex=buscarPersonaLocal(op.nombre);if(ex)log.push('👤 '+ex.nombre+' ya existía.');else{await addDoc(collection(fdb,'personas'),{nombre:String(op.nombre).trim(),cargo:op.cargo||''});log.push('👤 Persona creada: '+op.nombre);}}
+    else if(op.op==='crear_articulo'){const ex=buscarArticuloLocal(op.nombre);if(ex)log.push('📦 '+ex.nombre+' ya existía.');else{await addDoc(collection(fdb,'articulos'),{nombre:String(op.nombre).trim(),codigo:op.codigo||'',tipo:op.tipo||'herramienta',unidad:op.unidad||'und',total:Math.max(0,parseInt(op.total)||0),asignados:0,min:0});log.push('📦 Artículo creado: '+op.nombre);}}
+    else if(op.op==='set_total'){const a=buscarArticuloLocal(op.articulo);if(!a)throw 'Artículo no encontrado';await runTransaction(fdb,async tx=>{const r=doc(fdb,'articulos',a.id);const s=await tx.get(r);tx.update(r,{total:Math.max(parseInt(op.total)||0,s.data().asignados||0)});});log.push('🔢 '+a.nombre+' → total ajustado');}
+    else if(op.op==='entrada'){const a=buscarArticuloLocal(op.articulo);if(!a)throw 'Artículo no encontrado';const c=Math.max(1,parseInt(op.cantidad)||1);await ajustarStock(a.id,'entrada',c);await addMov({artId:a.id,tipo:'entrada',cant:c,personaId:'',ubic:op.ubicacion||'Almacén',devuelto:0,estado:'ok',user:'IA'});log.push('➕ Entrada: +'+c+' '+a.nombre);}
+    else if(op.op==='asignar'){const a=buscarArticuloLocal(op.articulo);if(!a)throw 'Artículo no encontrado';const p=buscarPersonaLocal(op.persona);if(!p)throw 'Persona no encontrada';const c=Math.max(1,parseInt(op.cantidad)||1);await ajustarStock(a.id,'asignacion',c);await addMov({artId:a.id,tipo:'asignacion',cant:c,personaId:p.id,ubic:op.ubicacion||'Obra',devuelto:0,estado:'activo',user:'IA'});log.push('📤 Asignado: '+c+' '+a.nombre+' → '+p.nombre);}
+    else if(op.op==='devolver'){const a=buscarArticuloLocal(op.articulo);if(!a)throw 'Artículo no encontrado';const p=buscarPersonaLocal(op.persona);if(!p)throw 'Persona no encontrada';let c=Math.max(1,parseInt(op.cantidad)||1);const acts=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo'&&m.artId===a.id&&m.personaId===p.id&&(m.cant-(m.devuelto||0))>0).sort((x,y)=>String(x.fecha).localeCompare(String(y.fecha)));const ten=acts.reduce((s,m)=>s+(m.cant-(m.devuelto||0)),0);if(!ten)throw p.nombre+' no tiene '+a.nombre;if(c>ten){log.push('⚠️ Solo tenía '+ten+'; se devuelven '+ten);c=ten;}let por=c;for(const m of acts){if(por<=0)break;const rest=m.cant-(m.devuelto||0);const d=Math.min(rest,por);const nd=(m.devuelto||0)+d;await updateDoc(doc(fdb,'movimientos',m.id),{devuelto:nd,estado:nd>=m.cant?'devuelto':'activo'});await addMov({artId:a.id,tipo:'devolucion',cant:d,personaId:p.id,ref:m.id,ubic:'Almacén',devuelto:0,estado:'ok',user:'IA'});por-=d;}log.push('📥 Devolución: '+c+' '+a.nombre+' de '+p.nombre);}
+    else if(op.op==='consumo'||op.op==='salida'){const a=buscarArticuloLocal(op.articulo);if(!a)throw 'Artículo no encontrado';const c=Math.max(1,parseInt(op.cantidad)||1);await ajustarStock(a.id,'consumo',c);const p=op.persona?buscarPersonaLocal(op.persona):null;await addMov({artId:a.id,tipo:'consumo',cant:c,personaId:p?p.id:'',ubic:op.ubicacion||'Obra',devuelto:0,estado:'consumido',user:'IA'});log.push('🧻 Consumo: -'+c+' '+a.nombre);}
+    else if(op.op==='ubicacion'){const a=buscarArticuloLocal(op.articulo);if(!a)throw 'Artículo no encontrado';const p=buscarPersonaLocal(op.persona);if(!p)throw 'Persona no encontrada';const acts=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo'&&m.artId===a.id&&m.personaId===p.id);if(!acts.length)throw p.nombre+' no tiene '+a.nombre;for(const m of acts)await updateDoc(doc(fdb,'movimientos',m.id),{ubic:op.ubicacion});log.push('📍 Ubicación de '+a.nombre+' de '+p.nombre+' → '+op.ubicacion);}
+    else log.push('⚠️ Operación no reconocida');
+  }catch(e){log.push('⚠️ '+(typeof e==='string'?e:(e.message||'Error')));}}
+  return log;
+}
+function buscarPersonaLocal(q){if(!q)return null;const n=norm(q);return db.people.find(p=>norm(p.nombre)===n)||db.people.find(p=>{const np=norm(p.nombre);return np.includes(n)||n.includes(np)})||null}
+function buscarArticuloLocal(q){if(!q)return null;const n=norm(q),sn=sing(n);return db.articles.find(a=>norm(a.nombre)===n)||db.articles.find(a=>{const na=norm(a.nombre),sa=sing(na);return na===sn||sa===sn||na.includes(n)||n.includes(na)||sa.includes(sn)||sn.includes(sa)})||null}
+async function sendAI(){
+  const input=document.getElementById('ai-input');const msg=input.value.trim();if(!msg)return;
+  const chat=document.getElementById('ai-chat');chat.innerHTML+='<div class="ai-msg user">'+esc(msg)+'</div>';input.value='';chat.scrollTop=chat.scrollHeight;
+  const btn=document.getElementById('ai-send');btn.disabled=true;btn.textContent='Procesando...';
+  const prompt='Eres el motor ejecutivo del inventario L3yvaINV (nube). ESTADO ACTUAL: '+JSON.stringify(estadoResumen())+'. Reglas: disponible=total-asignado; si la persona no existe y se crea, emite crear_persona antes; si el artículo no existe, crear_articulo antes; "X tiene N" emite asignar/devolver por la diferencia; "tenemos N" set_total; para consultas acciones=[] y responde en "respuesta". Responde SOLO JSON: {"acciones":[{"op":"crear_persona|crear_articulo|set_total|entrada|asignar|devolver|consumo|ubicacion",...}],"respuesta":"...","error":null}. Ubicaciones: '+UBIC.join(', ')+'. Instrucción: "'+msg+'"';
+  const res=await llamarQwen(prompt);
+  if(!res.ok)chat.innerHTML+='<div class="ai-msg system">⚠️ Sin conexión con la IA: '+esc(res.error)+'</div>';
+  else{let p=null;try{p=JSON.parse(res.text.replace(/```json/gi,'').replace(/```/g,'').trim())}catch(e){}
+    if(!p)chat.innerHTML+='<div class="ai-msg assistant">'+esc(res.text)+'</div>';
+    else if(p.error)chat.innerHTML+='<div class="ai-msg system">⚠️ '+esc(p.error)+'</div>';
+    else{const log=await ejecutarOperaciones(p.acciones||[]);let out=p.respuesta?'<div class="ai-msg assistant">'+esc(p.respuesta)+'</div>':'';log.forEach(l=>out+='<div class="ai-msg system">'+esc(l)+'</div>');chat.innerHTML+=out;}}
+  btn.disabled=false;btn.textContent='Enviar';chat.scrollTop=chat.scrollHeight;
+}
+
+/* ═══════ EXCEL ═══════ */
 function xesc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function cS(v,st){return '<Cell'+(st?' ss:StyleID="'+st+'"':'')+'><Data ss:Type="String">'+xesc(v)+'</Data></Cell>'}
 function cN(v,st){return '<Cell'+(st?' ss:StyleID="'+st+'"':'')+'><Data ss:Type="Number">'+(Number(v)||0)+'</Data></Cell>'}
@@ -503,7 +576,7 @@ function exportExcel(){const hoy=today();let r=[xR(['Artículo','Código','Tipo'
 
 function renderAll(){renderInicio();renderArticulos();renderAsignados();renderPersonas();renderHistorial();}
 
-Object.assign(window,{go,openFab,accion,openAI,exportExcel,openM,closeM,setAsigTab,devolverDesde,entrarSeleccion,salirSeleccion,toggleSel,toggleSelTodos,confirmarEliminarMov,confirmarEliminarArticulo,confirmarEliminarPersona,verDetalle,verDetalleMovimiento,saveArticulo,saveEntrada,saveAsignacion,saveDevolucion,saveConsumo,savePersona,showDvInfo,renderArticulos,renderAsignados,renderPersonas,renderHistorial,loginTab,loginSubmit,loginSalir,cambiarRol});
+Object.assign(window,{go,openFab,accion,openAI,sendAI,exportExcel,openM,closeM,setAsigTab,devolverDesde,entrarSeleccion,salirSeleccion,toggleSel,toggleSelTodos,confirmarEliminarMov,confirmarEliminarArticulo,confirmarEliminarPersona,verDetalle,verDetalleMovimiento,saveArticulo,saveEntrada,saveAsignacion,saveDevolucion,saveConsumo,savePersona,showDvInfo,renderArticulos,renderAsignados,renderPersonas,renderHistorial,loginTab,loginSubmit,loginSalir,cambiarRol,aprobarUsuario,rechazarUsuario});
 </script>
 </body>
 </html>
