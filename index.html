@@ -198,6 +198,10 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .detail-row{align-items:center}
 .article-stats{align-items:flex-start}
 .stat{display:flex;flex-direction:column;align-items:flex-start}
+/* ═══════ NOTIFICACIONES ═══════ */
+#btn-users{position:relative}
+.notif-badge{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:9px;background:var(--danger);color:#fff;font-size:10px;font-weight:800;display:none;align-items:center;justify-content:center;padding:0 4px}
+#admin-pending-banner{cursor:pointer}
 </style>
 </head>
 <body>
@@ -223,7 +227,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
     <h1>L3yvaINV</h1>
     <div class="header-actions">
       <button class="icon-btn" onclick="exportExcel()" title="Excel"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
-      <button class="icon-btn" id="btn-users" onclick="openM('ov-usuarios')" title="Usuarios" style="display:none"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>
+      <button class="icon-btn" id="btn-users" onclick="openM('ov-usuarios')" title="Usuarios" style="display:none"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span id="users-badge" class="notif-badge">0</span></button>
       <button class="icon-btn" onclick="openAI()" title="IA"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></button>
       <button class="icon-btn" onclick="loginSalir()" title="Cerrar sesión"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
       <div class="user-chip"><span class="dot"></span><span id="user-name">—</span></div>
@@ -233,6 +237,7 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
   <div class="content">
     <div class="screen active" id="scr-inicio">
       <div class="sync-bar" id="pending-banner" style="display:none"><span>⏳</span><span id="pending-text">Tu acceso está pendiente de aprobación.</span></div>
+      <div class="sync-bar warn" id="admin-pending-banner" style="display:none" onclick="openM('ov-usuarios')"><span>🔔</span><span id="admin-pending-text"></span></div>
       <div class="sync-bar"><span class="dot"></span><span id="sync-status">Conectado a la nube · sincronización en tiempo real</span></div>
       <div class="section-title">Resumen general</div>
       <div class="kpi-grid" id="kpis"></div>
@@ -531,7 +536,7 @@ function renderAsignados(){const q=(document.getElementById('q-asig').value||'')
 document.getElementById('lista-asignados').innerHTML=list.length?list.map(m=>{const a=articulo(m.artId);const r=m.cant-(m.devuelto||0);return '<div class="movement-item" onclick="verDetalleMovimiento(\''+m.id+'\')"><div class="movement-info"><div class="name">'+esc(a?a.nombre:'?')+'</div><div class="meta">👤 '+esc(persona(m.personaId))+' · 📍 '+esc(m.ubic)+' · '+fmt(m.fecha)+'</div></div><div class="movement-amount">'+r+'</div>'+(asigTab==='activos'?'<button class="btn-mini btn-ghost" onclick="event.stopPropagation();devolverDesde(\''+m.id+'\')">Devolver</button>':'')+'</div>';}).join(''):'<div class="empty-state"><h3>'+(asigTab==='activos'?'Nada en circulación':'Sin devoluciones')+'</h3></div>';}
 function devolverDesde(id){const m=db.movements.find(x=>x.id===id);document.getElementById('dv-asig').innerHTML='<option value="'+id+'" selected>'+esc(articulo(m.artId)?articulo(m.artId).nombre:'?')+' → '+esc(persona(m.personaId))+'</option>';document.getElementById('dv-fecha').value=today();document.getElementById('dv-cant').value=1;showDvInfo();openM('ov-devolver');}
 function renderPersonas(){const q=(document.getElementById('q-per').value||'').toLowerCase();const list=db.people.filter(p=>p.nombre.toLowerCase().includes(q));
-document.getElementById('lista-personas').innerHTML=(canEdit()?'<button class="btn-primary mb-4" onclick="openM(\'ov-persona\')">＋ Nueva persona</button>':'')+(list.length?list.map(p=>{const tiene=db.movements.filter(m=>m.personaId===p.id&&m.tipo==='asignacion'&&m.estado==='activo'&&(m.cant-(m.devuelto||0))>0);const agg={};tiene.forEach(m=>{if(!agg[m.artId])agg[m.artId]={c:0,u:m.ubic};agg[m.artId].c+=m.cant-(m.devuelto||0);});const rows=Object.entries(agg).map(([id,v])=>{const a=articulo(id);return '<div class="person-detail-row"><span class="label">'+esc(a?a.nombre:'?')+' · '+esc(v.u)+'</span><span class="value">'+v.c+'</span></div>'}).join('');return '<div class="person-card"><div class="person-header"><div class="person-avatar">'+p.nombre.charAt(0)+'</div><div class="person-info"><div class="person-name">'+esc(p.nombre)+'</div><div class="person-role">'+esc(p.cargo||'Sin cargo')+'</div></div><span class="person-badge '+(tiene.length?'':'ok')+'">'+tiene.length+' por devolver</span>'+(currentRole==='admin'?'<button class="article-delete" onclick="confirmarEliminarPersona(\''+p.id+'\')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>':'')+'</div>'+(tiene.length?'<div class="person-details">'+rows+'</div>':'')+'</div>';}).join(''):'<div class="empty-state"><h3>Sin personas</h3></div>');}
+document.getElementById('lista-personas').innerHTML=(canEdit()?'<button class="btn-primary mb-4" onclick="openM(\'ov-persona\')">＋ Nueva persona</button>':'')+(list.length?list.map(p=>{const tiene=db.movements.filter(m=>m.personaId===p.id&&m.tipo==='asignacion'&&m.estado==='activo'&&(m.cant-(m.devuelto||0))>0);const agg={};tiene.forEach(m=>{if(!agg[m.artId])agg[m.artId]={c:0,u:m.ubic};agg[m.artId].c+=m.cant-(m.devuelto||0);});const rows=Object.entries(agg).map(([id,v])=>{const a=articulo(id);return '<div class="person-detail-row"><span class="label">'+esc(a?a.nombre:'?')+' · '+esc(v.u)+'</span><span class="value">'+v.c+'</span></div>'}).join('');return '<div class="person-card"><div class="person-header"><div class="person-avatar">'+p.nombre.charAt(0)+'</div><div class="person-info"><div class="person-name">'+esc(p.nombre)+'</div><div class="person-role">'+esc(p.cargo||'Sin cargo')+'</div></div><span class="person-badge '+(tiene.length?'':'ok')+'">'+tiene.length+' por devolver</span>'+(currentRole==='admin'?'<button class="article-delete" onclick="confirmarEliminarPersona(\''+p.id+'\')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>':'')+'</div>'+(tiene.length?'<div class="person-details">'+rows+'</div>':'')+'</div>';}).join(''):'<div class="empty-state"><h3>Sin personas</h3></div>';}
 function renderMovChips(){const M={todos:'Todos',entrada:'Entradas',asignacion:'Asignaciones',devolucion:'Devoluciones',consumo:'Consumos'};document.getElementById('mov-chips').innerHTML=Object.entries(M).map(([v,l])=>'<div class="chip '+(filtroMov===v?'active':'')+'" onclick="filtroMov=\''+v+'\';renderHistorial()">'+l+'</div>').join('');}
 function renderHistorial(){renderMovChips();const list=[...db.movements].filter(m=>filtroMov==='todos'||m.tipo===filtroMov).sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));window._visibles=list.map(m=>m.id);
 document.getElementById('lista-historial').innerHTML=list.length?list.map(m=>movRow(m,modoSeleccion)).join(''):'<div class="empty-state"><h3>Sin movimientos</h3></div>';actualizarSelBar();}
@@ -619,6 +624,26 @@ function cN(v,st){return '<Cell'+(st?' ss:StyleID="'+st+'"':'')+'><Data ss:Type=
 function xR(c){return '<Row>'+c.join('')+'</Row>'}
 function xW(n,r){return '<Worksheet ss:Name="'+xesc(n)+'"><Table>'+r+'</Table></Worksheet>'}
 function exportExcel(){const hoy=today();let r=[xR(['Artículo','Código','Tipo','Unidad','Total','En almacén','Asignados','Stock mín.'].map(h=>cS(h,'sH')))];db.articles.forEach(a=>{r.push(xR([cS(a.nombre),cS(a.codigo||''),cS(TIPOS[a.tipo].l),cS(a.unidad),cN(a.total),cN(disponibles(a)),cN(asignados(a)),cN(a.min)]))});let k=[xR(['Fecha','Hora','Concepto','Responsable','Ubicación','Cant','Registró','Notas'].map(h=>cS(h,'sH')))];[...db.movements].sort((a,b)=>String(a.fecha).localeCompare(String(b.fecha))).forEach(m=>{k.push(xR([cS(fmt(m.fecha)),cS(m.hora||''),cS(m.tipo),cS(persona(m.personaId)),cS(m.ubic),cN(m.cant),cS(m.user||''),cS(m.notas||'')]))});const xml='<?xml version="1.0" encoding="UTF-8"?>\n<?mso-application progid="Excel.Sheet"?>\n<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="sH"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#1A5F4A" ss:Pattern="Solid"/></Style></Styles>'+xW('Resumen',r.join(''))+xW('Kardex',k.join(''))+'</Workbook>';const b=new Blob([xml],{type:'application/vnd.ms-excel'});const u=URL.createObjectURL(b);const l=document.createElement('a');l.href=u;l.download='Kardex_L3yvaINV_'+hoy+'.xls';document.body.appendChild(l);l.click();setTimeout(()=>{document.body.removeChild(l);URL.revokeObjectURL(u)},400);showToast('Excel descargado');}
+
+/* ═══════ NOTIFICACIONES DE SOLICITUDES (tiempo real) ═══════ */
+let _pendPrev=null,_watchStarted=false;
+function watchPending(){
+  if(_watchStarted)return;_watchStarted=true;
+  onSnapshot(collection(fdb,'users'),s=>{
+    const all=s.docs.map(d=>({id:d.id,...d.data()}));
+    const pend=all.filter(u=>u.role==='pendiente');
+    const badge=document.getElementById('users-badge');
+    if(badge){badge.textContent=pend.length;badge.style.display=pend.length?'flex':'none';}
+    const ban=document.getElementById('admin-pending-banner');
+    if(ban){
+      if(currentRole==='admin'&&pend.length){ban.style.display='flex';document.getElementById('admin-pending-text').textContent='🔔 '+pend.length+' solicitud'+(pend.length!==1?'s':'')+' de acceso pendiente'+(pend.length!==1?'s':'')+'. Toca para aprobar.';}
+      else ban.style.display='none';
+    }
+    if(currentRole==='admin'&&_pendPrev!==null&&pend.length>_pendPrev){showToast('🔔 Nueva solicitud de acceso pendiente');}
+    _pendPrev=pend.length;
+  });
+}
+onAuthStateChanged(auth,u=>{if(u)watchPending();});
 
 function renderAll(){renderInicio();renderArticulos();renderAsignados();renderPersonas();renderHistorial();}
 
