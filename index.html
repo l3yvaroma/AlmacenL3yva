@@ -13,31 +13,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#000000;
-  --surface:#0a0a0a;
-  --card:#141414;
-  --card-hover:#1a1a1a;
-  --border:#262626;
-  --text:#ffffff;
-  --text-secondary:#a1a1aa;
-  --text-muted:#71717a;
-  --accent:#39ff14;
-  --accent-dim:#2dd4bf;
-  --accent-glow:rgba(57,255,20,0.15);
-  --danger:#ef4444;
-  --danger-dim:#dc2626;
-  --warning:#f59e0b;
-  --success:#22c55e;
-  --radius:16px;
-  --radius-sm:12px;
-  --radius-xs:8px;
-  --shadow:0 4px 24px rgba(0,0,0,0.4);
-  --shadow-glow:0 0 20px rgba(57,255,20,0.1);
+  --bg:#000000;--surface:#0a0a0a;--card:#141414;--card-hover:#1a1a1a;--border:#262626;
+  --text:#ffffff;--text-secondary:#a1a1aa;--text-muted:#71717a;
+  --accent:#39ff14;--accent-dim:#2dd4bf;--accent-glow:rgba(57,255,20,0.15);
+  --danger:#ef4444;--danger-dim:#dc2626;--warning:#f59e0b;--success:#22c55e;
+  --radius:16px;--radius-sm:12px;--radius-xs:8px;
+  --shadow:0 4px 24px rgba(0,0,0,0.4);--shadow-glow:0 0 20px rgba(57,255,20,0.1);
 }
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--text);display:flex;justify-content:center;min-height:100vh;padding:0}
 .phone{width:100%;max-width:430px;height:100vh;max-height:932px;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;position:relative}
-
 .header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-bottom:1px solid var(--border)}
 .header h1{font-size:20px;font-weight:700;letter-spacing:-0.5px}
 .header-actions{display:flex;gap:12px}
@@ -45,20 +30,16 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .icon-btn:hover{background:var(--card-hover);border-color:var(--accent)}
 .icon-btn svg{width:20px;height:20px;stroke:var(--text-secondary);fill:none;stroke-width:2}
 .icon-btn:hover svg{stroke:var(--accent)}
-
 .content{flex:1;overflow-y:auto;padding:16px 20px 100px;scrollbar-width:none}
 .content::-webkit-scrollbar{display:none}
 .screen{display:none;animation:fadeIn 0.3s ease}
 .screen.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
 .location-selector{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all 0.2s}
 .location-selector:hover{border-color:var(--accent);background:var(--card-hover)}
 .location-selector span{font-size:14px;font-weight:500;color:var(--text)}
 .location-selector svg{width:18px;height:18px;stroke:var(--text-secondary);fill:none;stroke-width:2}
-
 .section-title{font-size:13px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
-
 .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
 .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:all 0.2s;cursor:pointer}
 .kpi-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow-glow)}
@@ -67,7 +48,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .kpi-card.warning .icon svg{stroke:var(--warning)}
 .kpi-card .value{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:4px}
 .kpi-card .label{font-size:12px;color:var(--text-secondary);font-weight:500}
-
 .movement-list{display:flex;flex-direction:column;gap:8px}
 .movement-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;align-items:center;gap:12px;transition:all 0.2s;cursor:pointer}
 .movement-item:hover{border-color:var(--accent);background:var(--card-hover)}
@@ -83,18 +63,15 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .movement-amount{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
 .amount-positive{color:var(--accent)}
 .amount-negative{color:var(--danger)}
-
 .search-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
 .search-bar svg{width:18px;height:18px;stroke:var(--text-muted);fill:none;stroke-width:2;flex-shrink:0}
 .search-bar input{flex:1;background:none;border:none;outline:none;font-size:14px;color:var(--text)}
 .search-bar input::placeholder{color:var(--text-muted)}
-
 .filter-chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:16px;scrollbar-width:none}
 .filter-chips::-webkit-scrollbar{display:none}
 .chip{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;background:var(--card);border:1px solid var(--border);color:var(--text-secondary);cursor:pointer;white-space:nowrap;transition:all 0.2s}
 .chip:hover{border-color:var(--accent);color:var(--text)}
 .chip.active{background:var(--accent);color:#000;border-color:var(--accent)}
-
 .article-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;transition:all 0.2s;cursor:pointer}
 .article-card:hover{border-color:var(--accent);transform:translateX(4px)}
 .article-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
@@ -111,7 +88,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .stat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
 .stat-warning .stat-value{color:var(--warning)}
 .stat-danger .stat-value{color:var(--danger)}
-
 .person-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
 .person-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .person-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-dim));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#000}
@@ -124,12 +100,10 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .person-detail-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px}
 .person-detail-row .label{color:var(--text-muted)}
 .person-detail-row .value{font-weight:600;font-variant-numeric:tabular-nums}
-
 .tabs{display:flex;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px;margin-bottom:16px}
 .tab{flex:1;text-align:center;padding:10px;border-radius:var(--radius-xs);font-size:13px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all 0.2s}
 .tab:hover{color:var(--text)}
 .tab.active{background:var(--accent);color:#000}
-
 .selection-bar{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--card);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;z-index:100;backdrop-filter:blur(20px)}
 .selection-bar.hidden{display:none}
 .checkbox-all{display:flex;align-items:center;gap:8px;cursor:pointer}
@@ -142,7 +116,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .btn-danger{background:var(--danger);color:#fff}
 .btn-danger:hover{background:var(--danger-dim)}
 .btn-danger:disabled{opacity:0.4;cursor:not-allowed}
-
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--surface);border-top:1px solid var(--border);padding:8px 20px 24px;display:flex;justify-content:space-around;z-index:40}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;position:relative}
 .nav-item svg{width:24px;height:24px;stroke:var(--text-muted);fill:none;stroke-width:2;transition:all 0.2s}
@@ -154,7 +127,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .nav-item.fab-nav{margin-top:-28px}
 .nav-item.fab-nav .fab-circle{width:48px;height:48px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(57,255,20,0.3)}
 .nav-item.fab-nav .fab-circle svg{stroke:#000;stroke-width:2.5}
-
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);display:none;align-items:flex-end;z-index:200}
 .modal-overlay.open{display:flex}
 .modal-sheet{background:var(--surface);width:100%;max-width:430px;margin:0 auto;border-radius:var(--radius) var(--radius) 0 0;padding:24px 20px 32px;max-height:90vh;overflow-y:auto;animation:slideUp 0.3s ease}
@@ -172,27 +144,22 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
 .btn-secondary{width:100%;padding:16px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-top:8px}
 .btn-secondary:hover{border-color:var(--accent)}
-
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 20px;display:flex;align-items:center;gap:10px;z-index:300;box-shadow:var(--shadow);transition:transform 0.3s ease}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast svg{width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:2}
 .toast.error svg{stroke:var(--danger)}
 .toast span{font-size:14px;font-weight:500}
-
 .empty-state{text-align:center;padding:60px 20px}
 .empty-state svg{width:64px;height:64px;stroke:var(--text-muted);fill:none;stroke-width:1.5;margin-bottom:16px;opacity:0.5}
 .empty-state h3{font-size:16px;font-weight:600;margin-bottom:8px}
 .empty-state p{font-size:13px;color:var(--text-muted)}
-
 .list-checkbox{width:22px;height:22px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
-
 .detail-row{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border)}
 .detail-row:last-child{border-bottom:none}
 .detail-label{font-size:13px;color:var(--text-muted);font-weight:500}
 .detail-value{font-size:14px;font-weight:600;text-align:right;max-width:60%}
-
 .ai-chat{display:flex;flex-direction:column;gap:12px;max-height:400px;overflow-y:auto;padding:12px 0}
-.ai-msg{padding:12px 16px;border-radius:var(--radius-sm);font-size:14px;line-height:1.5;max-width:85%}
+.ai-msg{padding:12px 16px;border-radius:var(--radius-sm);font-size:14px;line-height:1.5;max-width:92%}
 .ai-msg.user{background:var(--accent);color:#000;align-self:flex-end;border-bottom-right-radius:4px}
 .ai-msg.assistant{background:var(--card);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
 .ai-msg.system{background:var(--card);border:1px solid var(--border);align-self:center;text-align:center;font-size:12px;color:var(--text-muted)}
@@ -201,7 +168,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
 .ai-input:focus{border-color:var(--accent)}
 .ai-send{padding:12px 20px;background:var(--accent);color:#000;border:none;border-radius:var(--radius-sm);font-weight:700;cursor:pointer}
 .ai-send:disabled{opacity:0.4;cursor:not-allowed}
-
 .text-accent{color:var(--accent)}
 .text-danger{color:var(--danger)}
 .text-muted{color:var(--text-muted)}
@@ -232,10 +198,8 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
         <span>📍 Almacén Principal</span>
         <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
       </div>
-      
       <div class="section-title">Resumen general</div>
       <div class="kpi-grid" id="kpis"></div>
-      
       <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
         <span>Movimientos recientes</span>
         <a href="#" onclick="go('historial');return false" style="color:var(--accent);font-size:12px;text-decoration:none;font-weight:600">Ver todos →</a>
@@ -463,7 +427,6 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
   </div></div>
 
   <div class="modal-overlay" id="ov-detalle"><div class="modal-sheet" id="detalle-body"></div></div>
-
   <div class="modal-overlay" id="ov-movimiento"><div class="modal-sheet" id="movimiento-body"></div></div>
 
   <div class="modal-overlay" id="ov-confirm"><div class="modal-sheet">
@@ -478,9 +441,9 @@ body{background:var(--bg);color:var(--text);display:flex;justify-content:center;
   <div class="modal-overlay" id="ov-ai"><div class="modal-sheet">
     <div class="modal-grab"></div>
     <div class="modal-title">🤖 Asistente IA</div>
-    <div class="modal-subtitle">Escribe en lenguaje natural y yo registro el movimiento</div>
+    <div class="modal-subtitle">Escribe en lenguaje natural y yo ejecuto la operación</div>
     <div class="ai-chat" id="ai-chat">
-      <div class="ai-msg system">Ejemplo: "Asignar 2 taladros a Juan Pérez en Obra Norte"</div>
+      <div class="ai-msg system">Ejemplos: "Crea a ROMARIO LEYVA y asígnale 3 taladros" · "¿Cuántos taladros quedan?" · "Romario devuelve 2 taladros"</div>
     </div>
     <div class="ai-input-area">
       <input class="ai-input" id="ai-input" placeholder="Escribe tu instrucción..." onkeypress="if(event.key==='Enter')sendAI()">
@@ -530,6 +493,7 @@ function seed(){
 function save(){localStorage.setItem(KEY,JSON.stringify(db))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function today(){return new Date().toISOString().slice(0,10)}
+function ahora(){const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
 function fmt(d){if(!d)return'—';const[y,m,dd]=d.split('-');return dd+'/'+m+'/'+y}
 function esc(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function disponibles(art){const asig=db.movements.filter(m=>m.artId===art.id&&m.tipo==='asignacion'&&m.estado==='activo').reduce((s,m)=>s+(m.cant-m.devuelto),0);return art.total-asig}
@@ -601,7 +565,7 @@ function verDetalleMovimiento(id){
   const estadoLabel={activo:'🟡 En circulación',devuelto:'✅ Devuelto',consumido:'🔴 Consumido',ok:'✅ Completado'}[m.estado]||m.estado;
   let html=`<div class="modal-grab"></div>
     <div class="modal-title">${tipoLabel}</div>
-    <div class="modal-subtitle"><span class="movement-badge ${badgeClass}" style="display:inline-block;margin-right:8px">${m.tipo.toUpperCase()}</span>${fmt(m.fecha)}</div>
+    <div class="modal-subtitle"><span class="movement-badge ${badgeClass}" style="display:inline-block;margin-right:8px">${m.tipo.toUpperCase()}</span>${fmt(m.fecha)}${m.hora?' '+m.hora:''}</div>
     <div class="detail-row"><span class="detail-label">Artículo</span><span class="detail-value">${esc(a?a.nombre:'—')}</span></div>
     <div class="detail-row"><span class="detail-label">Código</span><span class="detail-value">${esc(a?(a.codigo||'s/código'):'—')}</span></div>
     <div class="detail-row"><span class="detail-label">Cantidad</span><span class="detail-value text-accent">${m.cant} ${esc(a?a.unidad:'')}</span></div>`;
@@ -624,12 +588,117 @@ function verDetalleMovimiento(id){
   openM('ov-movimiento');
 }
 
-/* ═══════ ASISTENTE IA (QWEN) ═══════ */
+/* ═══════════ MOTOR IA (QWEN) ═══════════ */
 const QWEN_KEY='sk-ws-H.DMLDYXH.B7DP.MEQCIEadN2MZxHF09JwM3mQ8E1ucdQaDgJEoOZK2K6LV6kydAiBd_vLuxESH5Uqlo3Sz1auPjz6TvGDv6Dh8EgTYpTxwMg';
+let pendienteAsignar=null;
 
-function openAI(){
-  openM('ov-ai');
-  document.getElementById('ai-input').focus();
+function openAI(){openM('ov-ai');document.getElementById('ai-input').focus();}
+
+function norm(s){return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();}
+function sing(s){s=norm(s);return s.endsWith('s')?s.slice(0,-1):s;}
+function buscarPersona(q){if(!q)return null;const n=norm(q);return db.people.find(p=>norm(p.nombre)===n)||db.people.find(p=>{const np=norm(p.nombre);return np.includes(n)||n.includes(np);})||null;}
+function buscarArticulo(q){if(!q)return null;const n=norm(q),sn=sing(q);
+  return db.articles.find(a=>norm(a.nombre)===n)||db.articles.find(a=>{const na=norm(a.nombre),sa=sing(a.nombre);return na===sn||sa===sn||na.includes(n)||n.includes(na)||sa.includes(sn)||sn.includes(sa);})||null;}
+
+function estadoResumen(){
+  return {
+    articulos:db.articles.map(a=>({nombre:a.nombre,tipo:a.tipo,unidad:a.unidad,total:a.total,disponibles:disponibles(a),asignados:asignados(a)})),
+    personas:db.people.map(p=>({nombre:p.nombre,tiene:db.movements.filter(m=>m.personaId===p.id&&m.tipo==='asignacion'&&m.estado==='activo'&&m.cant-m.devuelto>0).reduce((acc,m)=>{const a=articulo(m.artId);const e=acc.find(x=>x.articulo===a.nombre);if(e){e.cantidad+=m.cant-m.devuelto;}else{acc.push({articulo:a.nombre,cantidad:m.cant-m.devuelto,ubicacion:m.ubic});}return acc;},[])}))
+  };
+}
+
+function ejecutarOperaciones(ops){
+  const log=[];
+  (ops||[]).forEach(op=>{
+    try{
+      if(op.op==='crear_persona'){
+        const ex=buscarPersona(op.nombre);
+        if(ex){log.push('👤 '+ex.nombre+' ya existía.');}
+        else{db.people.push({id:uid(),nombre:String(op.nombre||'').trim(),cargo:op.cargo||''});log.push('👤 Persona creada: '+op.nombre);}
+      }
+      else if(op.op==='crear_articulo'){
+        const ex=buscarArticulo(op.nombre);
+        if(ex){log.push('📦 '+ex.nombre+' ya existía.');if(op.total){ex.total=Math.max(ex.total,parseInt(op.total)||0);}}
+        else{db.articles.push({id:uid(),nombre:String(op.nombre||'').trim(),codigo:op.codigo||'',tipo:op.tipo||'herramienta',unidad:op.unidad||'und',total:Math.max(0,parseInt(op.total)||0),min:0});log.push('📦 Artículo creado: '+op.nombre);}
+      }
+      else if(op.op==='set_total'){
+        const a=buscarArticulo(op.articulo);if(!a)throw 'Artículo no encontrado: '+op.articulo;
+        const asig=asignados(a);const t=Math.max(parseInt(op.total)||0,asig);
+        a.total=t;log.push('🔢 '+a.nombre+' → total: '+t+' (disponible: '+disponibles(a)+')');
+      }
+      else if(op.op==='entrada'){
+        const a=buscarArticulo(op.articulo);if(!a)throw 'Artículo no encontrado: '+op.articulo;
+        const c=Math.max(1,parseInt(op.cantidad)||1);
+        a.total+=c;
+        db.movements.push({id:uid(),artId:a.id,tipo:'entrada',cant:c,personaId:'',ubic:op.ubicacion||'Almacén',fecha:today(),hora:ahora(),devuelto:0,estado:'ok',user:'IA',notas:op.nota||'Registrado por asistente'});
+        log.push('➕ Entrada: +'+c+' '+a.nombre+' (disponible: '+disponibles(a)+')');
+      }
+      else if(op.op==='asignar'){
+        const a=buscarArticulo(op.articulo);if(!a)throw 'Artículo no encontrado: '+op.articulo;
+        const p=buscarPersona(op.persona);if(!p)throw 'Persona no encontrada: '+op.persona;
+        const c=Math.max(1,parseInt(op.cantidad)||1);
+        const disp=disponibles(a);
+        if(c>disp){
+          pendienteAsignar={artId:a.id,personaId:p.id,cant:disp,ubic:op.ubicacion||''};
+          log.push('⚠️ Solo hay '+disp+' '+a.nombre+' disponibles (pediste '+c+').');
+        }else{
+          db.movements.push({id:uid(),artId:a.id,tipo:'asignacion',cant:c,personaId:p.id,ubic:op.ubicacion||'Obra',fecha:today(),hora:ahora(),devuelto:0,estado:'activo',user:'IA',notas:op.nota||'Registrado por asistente'});
+          log.push('📤 Asignado: '+c+' '+a.nombre+' → '+p.nombre+' (disponible: '+disponibles(a)+')');
+        }
+      }
+      else if(op.op==='devolver'){
+        const a=buscarArticulo(op.articulo);if(!a)throw 'Artículo no encontrado: '+op.articulo;
+        const p=buscarPersona(op.persona);if(!p)throw 'Persona no encontrada: '+op.persona;
+        let c=Math.max(1,parseInt(op.cantidad)||1);
+        const acts=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo'&&m.artId===a.id&&m.personaId===p.id&&m.cant-m.devuelto>0).sort((x,y)=>x.fecha.localeCompare(y.fecha));
+        const ten=acts.reduce((s,m)=>s+(m.cant-m.devuelto),0);
+        if(ten===0)throw p.nombre+' no tiene '+a.nombre+' asignados.';
+        if(c>ten){log.push('⚠️ '+p.nombre+' solo tenía '+ten+' '+a.nombre+'; se devuelven '+ten+'.');c=ten;}
+        let por=c;
+        acts.forEach(m=>{
+          if(por<=0)return;
+          const rest=m.cant-m.devuelto;const d=Math.min(rest,por);
+          m.devuelto+=d;if(m.devuelto>=m.cant)m.estado='devuelto';
+          db.movements.push({id:uid(),artId:a.id,tipo:'devolucion',cant:d,personaId:p.id,ref:m.id,ubic:'Almacén',fecha:today(),hora:ahora(),devuelto:0,estado:'ok',user:'IA',notas:'Registrado por asistente'});
+          por-=d;
+        });
+        log.push('📥 Devolución: '+c+' '+a.nombre+' de '+p.nombre+' (disponible: '+disponibles(a)+')');
+      }
+      else if(op.op==='consumo'||op.op==='salida'){
+        const a=buscarArticulo(op.articulo);if(!a)throw 'Artículo no encontrado: '+op.articulo;
+        const c=Math.max(1,parseInt(op.cantidad)||1);
+        const disp=disponibles(a);
+        if(c>disp)throw 'Stock insuficiente de '+a.nombre+' (disponible: '+disp+').';
+        a.total-=c;
+        const p=op.persona?buscarPersona(op.persona):null;
+        db.movements.push({id:uid(),artId:a.id,tipo:'consumo',cant:c,personaId:p?p.id:'',ubic:op.ubicacion||'Obra',fecha:today(),hora:ahora(),devuelto:0,estado:'consumido',user:'IA',notas:op.nota||'Registrado por asistente'});
+        log.push('🧻 Consumo: -'+c+' '+a.nombre+' (disponible: '+disponibles(a)+')');
+      }
+      else if(op.op==='ubicacion'){
+        const a=buscarArticulo(op.articulo);if(!a)throw 'Artículo no encontrado: '+op.articulo;
+        const p=buscarPersona(op.persona);if(!p)throw 'Persona no encontrada: '+op.persona;
+        const acts=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo'&&m.artId===a.id&&m.personaId===p.id);
+        if(!acts.length)throw p.nombre+' no tiene '+a.nombre+' asignados.';
+        acts.forEach(m=>m.ubic=op.ubicacion);
+        log.push('📍 Ubicación de '+a.nombre+' de '+p.nombre+' → '+op.ubicacion);
+      }
+      else log.push('⚠️ Operación no reconocida: '+op.op);
+    }catch(e){log.push('⚠️ '+(typeof e==='string'?e:(e.message||'Error')));}
+  });
+  save();renderAll();
+  return log;
+}
+
+function aplicarPendiente(){
+  if(!pendienteAsignar)return;
+  const {artId,personaId,cant,ubic}=pendienteAsignar;
+  const a=articulo(artId),p=db.people.find(x=>x.id===personaId);
+  db.movements.push({id:uid(),artId,tipo:'asignacion',cant,personaId,ubic:ubic||'Obra',fecha:today(),hora:ahora(),devuelto:0,estado:'activo',user:'IA',notas:'Aceptado por usuario'});
+  pendienteAsignar=null;
+  save();renderAll();
+  const chat=document.getElementById('ai-chat');
+  chat.innerHTML+='<div class="ai-msg system">✅ Asignado: '+cant+' '+esc(a.nombre)+' → '+esc(p.nombre)+'</div>';
+  chat.scrollTop=chat.scrollHeight;
 }
 
 async function llamarQwen(prompt){
@@ -658,12 +727,8 @@ async function llamarQwen(prompt){
         const t=parse(d);
         if(t)return{ok:true,text:t};
         lastErr='Respuesta vacía';
-      }else{
-        lastErr='HTTP '+r.status;
-      }
-    }catch(e){
-      lastErr='Red/CORS';
-    }
+      }else{lastErr='HTTP '+r.status;}
+    }catch(e){lastErr='Red/CORS';}
   }
   return{ok:false,error:lastErr};
 }
@@ -672,72 +737,43 @@ async function sendAI(){
   const input=document.getElementById('ai-input');
   const msg=input.value.trim();
   if(!msg)return;
-
   const chat=document.getElementById('ai-chat');
   chat.innerHTML+='<div class="ai-msg user">'+esc(msg)+'</div>';
   input.value='';
   chat.scrollTop=chat.scrollHeight;
-
   const sendBtn=document.getElementById('ai-send');
   sendBtn.disabled=true;sendBtn.textContent='Procesando...';
 
-  const prompt='Eres el asistente de inventario L3yvaINV. Analiza el mensaje y responde SOLO con un JSON válido (sin texto extra) con este formato: {"tipo":"entrada|asignacion|consumo|devolucion","articulo":"...","cantidad":N,"persona":"...","ubicacion":"...","error":"..."}. Usa "error" solo si no se entiende o falta un dato crítico. Artículos conocidos: '+db.articles.map(a=>a.nombre).join(', ')+'. Personas conocidas: '+db.people.map(p=>p.nombre).join(', ')+'. Ubicaciones válidas: '+UBIC.join(', ')+'. Mensaje: "'+msg+'"';
+  const estado=JSON.stringify(estadoResumen());
+  const prompt='Eres el motor ejecutivo del sistema de inventario L3yvaINV. Debes INTERPRETAR la instrucción del usuario y EJECUTARLA devolviendo operaciones; el sistema las aplicará sobre la base de datos. '+
+  'ESTADO ACTUAL DEL SISTEMA: '+estado+'. '+
+  'REGLAS: disponible = total - asignado. Nunca asignes más que el disponible (el sistema validará de todos modos). Si se menciona crear una persona nueva, emite crear_persona ANTES de asignarle. Si se menciona un artículo que no existe, emite crear_articulo ANTES (tipo: consumible para cemento/tornillos/guantes/discos; herramienta para taladros/amoladoras/pulidoras; equipo para GPS/estaciones; activo_fijo para laptops/impresoras; otro ante la duda). '+
+  '"X tiene N artículos": compara con el estado y emite asignar o devolver por la diferencia. "Asígnale N más": asignar N. "Tenemos N artículos" o "hay N en almacén": set_total N. "Llegaron/entraron N": entrada N. '+
+  'Para CONSULTAS (cuántos quedan, quién tiene, qué tiene X, cuántos fuera del almacén): usa acciones=[] y responde en "respuesta" con los datos del ESTADO ACTUAL. '+
+  'Responde SIEMPRE SOLO con un JSON válido, sin texto fuera del JSON, con este formato: '+
+  '{"acciones":[{"op":"crear_persona","nombre":"","cargo":""},{"op":"crear_articulo","nombre":"","tipo":"herramienta","unidad":"und","total":0},{"op":"set_total","articulo":"","total":0},{"op":"entrada","articulo":"","cantidad":0,"ubicacion":""},{"op":"asignar","articulo":"","cantidad":0,"persona":"","ubicacion":""},{"op":"devolver","articulo":"","cantidad":0,"persona":""},{"op":"consumo","articulo":"","cantidad":0,"persona":"","ubicacion":""},{"op":"ubicacion","articulo":"","persona":"","ubicacion":""}],"respuesta":"confirmación breve en español o respuesta a la consulta","error":null}. '+
+  'Usa solo las operaciones necesarias. Ubicaciones válidas: '+UBIC.join(', ')+'. Instrucción del usuario: "'+msg+'"';
 
   const res=await llamarQwen(prompt);
 
   if(!res.ok){
     chat.innerHTML+='<div class="ai-msg system">⚠️ No se pudo conectar con la IA. Detalle: '+esc(res.error)+'<br>Copia este detalle y envíaselo a tu asistente.</div>';
   }else{
-    const aiText=res.text;
     let parsed=null;
-    try{parsed=JSON.parse(aiText.replace(/```json/gi,'').replace(/```/g,'').trim())}catch(e){}
-
+    try{parsed=JSON.parse(res.text.replace(/```json/gi,'').replace(/```/g,'').trim())}catch(e){}
     if(!parsed){
-      chat.innerHTML+='<div class="ai-msg assistant">'+esc(aiText||'Sin respuesta')+'</div>';
+      chat.innerHTML+='<div class="ai-msg assistant">'+esc(res.text||'Sin respuesta')+'</div>';
     }else if(parsed.error){
       chat.innerHTML+='<div class="ai-msg system">⚠️ '+esc(parsed.error)+'</div>';
     }else{
-      const art=db.articles.find(a=>a.nombre.toLowerCase().includes((parsed.articulo||'').toLowerCase()));
-      const per=parsed.persona?db.people.find(p=>p.nombre.toLowerCase().includes((parsed.persona||'').toLowerCase())):null;
-      const cant=Math.max(1,parseInt(parsed.cantidad)||1);
-
-      if(!art){
-        chat.innerHTML+='<div class="ai-msg system">⚠️ No encontré el artículo "'+esc(parsed.articulo||'')+'".</div>';
-      }else if(parsed.tipo==='asignacion'&&!per){
-        chat.innerHTML+='<div class="ai-msg system">⚠️ No encontré a la persona "'+esc(parsed.persona||'')+'".</div>';
-      }else{
-        const disp=disponibles(art);
-        if(parsed.tipo==='entrada'){
-          art.total+=cant;
-          db.movements.push({id:uid(),artId:art.id,tipo:'entrada',cant,personaId:'',ubic:parsed.ubicacion||'Almacén',fecha:today(),devuelto:0,estado:'ok',user:'IA',notas:'Registrado por asistente'});
-          chat.innerHTML+='<div class="ai-msg system">✅ Entrada: +'+cant+' '+esc(art.nombre)+'</div>';
-        }else if(parsed.tipo==='asignacion'){
-          if(cant>disp){chat.innerHTML+='<div class="ai-msg system">⚠️ Stock insuficiente (disponible: '+disp+')</div>';}
-          else{
-            db.movements.push({id:uid(),artId:art.id,tipo:'asignacion',cant,personaId:per.id,ubic:parsed.ubicacion||'Obra',fecha:today(),devuelto:0,estado:'activo',user:'IA',notas:'Registrado por asistente'});
-            chat.innerHTML+='<div class="ai-msg system">✅ Asignado: '+cant+' '+esc(art.nombre)+' → '+esc(per.nombre)+'</div>';
-          }
-        }else if(parsed.tipo==='consumo'){
-          if(cant>disp){chat.innerHTML+='<div class="ai-msg system">⚠️ Stock insuficiente (disponible: '+disp+')</div>';}
-          else{
-            art.total-=cant;
-            db.movements.push({id:uid(),artId:art.id,tipo:'consumo',cant,personaId:per?per.id:'',ubic:parsed.ubicacion||'Obra',fecha:today(),devuelto:0,estado:'consumido',user:'IA',notas:'Registrado por asistente'});
-            chat.innerHTML+='<div class="ai-msg system">✅ Consumo: -'+cant+' '+esc(art.nombre)+'</div>';
-          }
-        }else if(parsed.tipo==='devolucion'){
-          const cand=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo'&&m.artId===art.id&&(!per||m.personaId===per.id)).sort((a,b)=>b.fecha.localeCompare(a.date||b.fecha))[0];
-          if(!cand){chat.innerHTML+='<div class="ai-msg system">⚠️ No hay asignación activa de '+esc(art.nombre)+' para devolver.</div>';}
-          else{
-            const dev=Math.min(cant,cand.cant-cand.devuelto);
-            cand.devuelto+=dev;if(cand.devuelto>=cand.cant)cand.estado='devuelto';
-            db.movements.push({id:uid(),artId:art.id,tipo:'devolucion',cant:dev,personaId:cand.personaId,ref:cand.id,ubic:'Almacén',fecha:today(),devuelto:0,estado:'ok',user:'IA',notas:'Registrado por asistente'});
-            chat.innerHTML+='<div class="ai-msg system">✅ Devolución: '+dev+' '+esc(art.nombre)+' de '+esc(persona(cand.personaId))+'</div>';
-          }
-        }else{
-          chat.innerHTML+='<div class="ai-msg system">⚠️ Tipo de movimiento no reconocido.</div>';
-        }
-        save();renderAll();
+      const log=ejecutarOperaciones(parsed.acciones||[]);
+      let out='';
+      if(parsed.respuesta)out+='<div class="ai-msg assistant">'+esc(parsed.respuesta)+'</div>';
+      log.forEach(l=>out+='<div class="ai-msg system">'+esc(l)+'</div>');
+      if(pendienteAsignar){
+        out+='<div class="ai-msg system">¿Quieres asignar los '+pendienteAsignar.cant+' disponibles? <button class="btn-mini btn-ghost" style="margin-left:8px" onclick="aplicarPendiente()">Sí, asignar</button></div>';
       }
+      chat.innerHTML+=out;
     }
   }
 
@@ -745,6 +781,7 @@ async function sendAI(){
   chat.scrollTop=chat.scrollHeight;
 }
 
+/* ═══════════ RENDER ═══════════ */
 function renderInicio(){
   const arts=db.articles;
   const activos=db.movements.filter(m=>m.tipo==='asignacion'&&m.estado==='activo');
@@ -805,8 +842,11 @@ function renderPersonas(){
   document.getElementById('lista-personas').innerHTML=`<button class="btn-primary mb-4" onclick="openM('ov-persona')" style="margin-bottom:16px">＋ Nueva persona</button>`+
   (list.length?list.map(p=>{
     const tiene=db.movements.filter(m=>m.personaId===p.id&&m.tipo==='asignacion'&&m.estado==='activo'&&m.cant-m.devuelto>0);
+    const agg={};
+    tiene.forEach(m=>{if(!agg[m.artId])agg[m.artId]={cant:0,ubic:m.ubic,id:m.id};agg[m.artId].cant+=m.cant-m.devuelto;});
     const consumos=db.movements.filter(m=>m.personaId===p.id&&m.tipo==='consumo').sort((a,b)=>b.fecha.localeCompare(a.fecha));
-    return `<div class="person-card"><div class="person-header"><div class="person-avatar">${p.nombre.charAt(0)}</div><div class="person-info"><div class="person-name">${esc(p.nombre)}</div><div class="person-role">${esc(p.cargo||'Sin cargo')}</div></div><span class="person-badge ${tiene.length?'':'ok'}">${tiene.length} por devolver</span><button class="article-delete" onclick="confirmarEliminarPersona('${p.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>${tiene.length?'<div class="person-details"><div class="section-title" style="margin-bottom:8px">📤 A devolver</div>'+tiene.map(m=>{const a=articulo(m.artId);return `<div class="person-detail-row" onclick="verDetalleMovimiento('${m.id}')" style="cursor:pointer"><span class="label">${esc(a?a.nombre:'?')} · ${esc(m.ubic)}</span><span class="value">${m.cant-m.devuelto}</span></div>`}).join('')+'</div>':''}${consumos.length?'<div class="person-details"><div class="section-title" style="margin-bottom:8px">🧻 Recibidos</div>'+consumos.slice(0,5).map(m=>{const a=articulo(m.artId);return `<div class="person-detail-row" onclick="verDetalleMovimiento('${m.id}')" style="cursor:pointer"><span class="label">${esc(a?a.nombre:'?')} · ${fmt(m.fecha)}</span><span class="value">${m.cant}</span></div>`}).join('')+'</div>':''}</div>`;
+    const rows=Object.entries(agg).map(([artId,v])=>{const a=articulo(artId);return `<div class="person-detail-row" onclick="verDetalleMovimiento('${v.id}')" style="cursor:pointer"><span class="label">${esc(a?a.nombre:'?')} · ${esc(v.ubic)}</span><span class="value">${v.cant}</span></div>`}).join('');
+    return `<div class="person-card"><div class="person-header"><div class="person-avatar">${p.nombre.charAt(0)}</div><div class="person-info"><div class="person-name">${esc(p.nombre)}</div><div class="person-role">${esc(p.cargo||'Sin cargo')}</div></div><span class="person-badge ${tiene.length?'':'ok'}">${tiene.length} por devolver</span><button class="article-delete" onclick="confirmarEliminarPersona('${p.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>${tiene.length?'<div class="person-details"><div class="section-title" style="margin-bottom:8px">📤 A devolver</div>'+rows+'</div>':''}${consumos.length?'<div class="person-details"><div class="section-title" style="margin-bottom:8px">🧻 Recibidos</div>'+consumos.slice(0,5).map(m=>{const a=articulo(m.artId);return `<div class="person-detail-row" onclick="verDetalleMovimiento('${m.id}')" style="cursor:pointer"><span class="label">${esc(a?a.nombre:'?')} · ${fmt(m.fecha)}</span><span class="value">${m.cant}</span></div>`}).join('')+'</div>':''}</div>`;
   }).join(''):'<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><h3>Sin personas</h3><p>Agrega tu primera persona</p></div>');
 }
 
@@ -896,7 +936,7 @@ function saveEntrada(){
   const artId=document.getElementById('en-art').value;if(!artId){showToast('Selecciona un artículo',true);return}
   const cant=parseInt(document.getElementById('en-cant').value)||0;if(cant<=0){showToast('Cantidad inválida',true);return}
   const a=articulo(artId);a.total+=cant;
-  db.movements.push({id:uid(),artId,tipo:'entrada',cant,personaId:'',ubic:'Almacén',fecha:document.getElementById('en-fecha').value||today(),devuelto:0,estado:'ok',user:document.getElementById('en-user').value.trim(),notas:[document.getElementById('en-motivo').value,document.getElementById('en-notas').value.trim()].filter(Boolean).join(' · ')});
+  db.movements.push({id:uid(),artId,tipo:'entrada',cant,personaId:'',ubic:'Almacén',fecha:document.getElementById('en-fecha').value||today(),hora:ahora(),devuelto:0,estado:'ok',user:document.getElementById('en-user').value.trim(),notas:[document.getElementById('en-motivo').value,document.getElementById('en-notas').value.trim()].filter(Boolean).join(' · ')});
   save();closeM('ov-entrada');renderAll();showToast('Entrada registrada');
 }
 
@@ -911,7 +951,7 @@ function saveAsignacion(){
   const artId=document.getElementById('as-art').value;const personaId=document.getElementById('as-persona').value;const ubic=document.getElementById('as-ubic').value;const cant=parseInt(document.getElementById('as-cant').value)||0;
   if(!artId||!personaId||!ubic){showToast('Completa artículo, responsable y ubicación',true);return}
   const a=articulo(artId);const disp=disponibles(a);if(cant<=0){showToast('Cantidad inválida',true);return}if(cant>disp){showToast(`Solo hay ${disp} ${a.unidad} disponibles`,true);return}
-  db.movements.push({id:uid(),artId,tipo:'asignacion',cant,personaId,ubic,fecha:document.getElementById('as-fecha').value||today(),devuelto:0,estado:'activo',user:document.getElementById('as-user').value.trim(),notas:document.getElementById('as-notas').value.trim()});
+  db.movements.push({id:uid(),artId,tipo:'asignacion',cant,personaId,ubic,fecha:document.getElementById('as-fecha').value||today(),hora:ahora(),devuelto:0,estado:'activo',user:document.getElementById('as-user').value.trim(),notas:document.getElementById('as-notas').value.trim()});
   save();closeM('ov-asignar');renderAll();showToast('Asignación registrada');
 }
 
@@ -926,7 +966,7 @@ function saveDevolucion(){
   const m=db.movements.find(x=>x.id===id);const a=articulo(m.artId);const cant=parseInt(document.getElementById('dv-cant').value)||0;const rest=m.cant-m.devuelto;
   if(cant<=0||cant>rest){showToast(`La cantidad debe estar entre 1 y ${rest}`,true);return}
   m.devuelto+=cant;if(m.devuelto>=m.cant)m.estado='devuelto';
-  db.movements.push({id:uid(),artId:m.artId,tipo:'devolucion',cant,personaId:m.personaId,ref:m.id,ubic:'Almacén',fecha:document.getElementById('dv-fecha').value||today(),devuelto:0,estado:'ok',user:document.getElementById('dv-user').value.trim(),notas:[document.getElementById('dv-estado').value,document.getElementById('dv-notas').value.trim()].filter(Boolean).join(' · ')});
+  db.movements.push({id:uid(),artId:m.artId,tipo:'devolucion',cant,personaId:m.personaId,ref:m.id,ubic:'Almacén',fecha:document.getElementById('dv-fecha').value||today(),hora:ahora(),devuelto:0,estado:'ok',user:document.getElementById('dv-user').value.trim(),notas:[document.getElementById('dv-estado').value,document.getElementById('dv-notas').value.trim()].filter(Boolean).join(' · ')});
   save();closeM('ov-devolver');renderAll();showToast('Devolución registrada');
 }
 
@@ -943,7 +983,7 @@ function saveConsumo(){
   if(cant<=0){showToast('Cantidad inválida',true);return}if(cant>disp){showToast(`Solo hay ${disp} ${a.unidad} disponibles`,true);return}
   const ubic=document.getElementById('co-ubic').value;if(!ubic){showToast('Indica el destino',true);return}
   a.total-=cant;
-  db.movements.push({id:uid(),artId,tipo:'consumo',cant,personaId:document.getElementById('co-persona').value,ubic,fecha:document.getElementById('co-fecha').value||today(),devuelto:0,estado:'consumido',user:document.getElementById('co-user').value.trim(),notas:[document.getElementById('co-motivo').value,document.getElementById('co-notas').value.trim()].filter(Boolean).join(' · ')});
+  db.movements.push({id:uid(),artId,tipo:'consumo',cant,personaId:document.getElementById('co-persona').value,ubic,fecha:document.getElementById('co-fecha').value||today(),hora:ahora(),devuelto:0,estado:'consumido',user:document.getElementById('co-user').value.trim(),notas:[document.getElementById('co-motivo').value,document.getElementById('co-notas').value.trim()].filter(Boolean).join(' · ')});
   save();closeM('ov-consumo');renderAll();showToast('Consumo registrado');
 }
 
