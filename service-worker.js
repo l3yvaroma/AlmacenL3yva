@@ -1,21 +1,35 @@
-// ═══════ SERVICE WORKER DE LIMPIEZA ═══════
-// Se auto-elimina y borra TODAS las cachés antiguas.
-// A partir de ahora la app carga siempre la versión más reciente desde la red.
+const CACHE_NAME = 'almacenpro-v1';
+const ASSETS = [
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './icon-192.png',
+  './icon-512.png'
+];
 
 self.addEventListener('install', (e) => {
+  e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(ASSETS)));
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (e) => {
   e.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.map(k => caches.delete(k))))
-      .then(() => self.registration.unregister())
-      .then(() => self.clients.claim())
+    caches.keys().then((ns) =>
+      Promise.all(ns.filter((n) => n !== CACHE_NAME).map((n) => caches.delete(n)))
+    ).then(() => self.clients.claim())
   );
 });
 
-// Responde siempre desde la red, nunca desde caché.
 self.addEventListener('fetch', (e) => {
-  e.respondWith(fetch(e.request, { cache: 'no-store' }));
+  if (e.request.method !== 'GET') return;
+  e.respondWith(
+    caches.match(e.request).then((cached) => {
+      if (cached) return cached;
+      return fetch(e.request).then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE_NAME).then((c) => c.put(e.request, copy));
+        return res;
+      });
+    }).catch(() => caches.match('./index.html'))
+  );
 });
